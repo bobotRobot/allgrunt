@@ -1,0 +1,27 @@
+---
+const { paths, last } = Astro.props;
+---
+
+<div class="wrapper">
+    <ul class="breadcrumbs">
+        <li>
+            <a href="/" title="Главная">
+                <span>Главная</span>
+            </a>
+        </li>
+        {
+            paths.map((path) => {
+                return (
+                    <li>
+                        <a href={path[0]} title={path[1]}>
+                            <span>{path[1]}</span>
+                        </a>
+                    </li>
+                )
+            })
+        }
+        <li class="current">
+            <span>{last}</span>
+        </li>
+    </ul>
+</div>

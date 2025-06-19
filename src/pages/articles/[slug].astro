@@ -1,0 +1,51 @@
+---
+import { Image } from 'astro:assets';
+import BaseLayout from '@layouts/BaseLayout.astro';
+import Header from '@components/header.astro';
+import Footer from '@components/footer.astro';
+import { getCollection } from 'astro:content';
+
+export async function getStaticPaths() {
+  const articles = await getCollection("articles")
+  return articles.map((article) => {
+    return {
+      params: { slug: article.slug},
+      props: { article },
+    };
+  });
+}
+
+import Breadcrumbs from "@components/breadcrumbs.astro";
+
+const { article } = Astro.props;
+const { Content } = await article.render();
+console.log(article)
+---
+
+<BaseLayout>
+  <Header/>
+  <main class="bg-white py-12">
+    <div class="container mx-auto px-4 max-w-4xl">
+      <div class="mb-6">
+        <div class="flex items-center text-sm text-stone-500 mb-4">
+          <a href="/articles" class="hover:text-orange-600">← Все статьи</a>
+        </div>
+        <section class="section">
+          <div class="wrapper">
+              <div class="news-detail">
+                  <h1 class="main-title main-title--left">{article.data.title}</h1>
+                  <br>
+              <div class="news-text">
+                <article class="prose max-w-none">
+                  <slot /> <!-- Здесь рендерится тело статьи -->
+                </article>
+              </div>
+              <br>
+          </div>
+        </section>
+
+
+    </div>
+  </main>
+  <Footer/>
+</BaseLayout>

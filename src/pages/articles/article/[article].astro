@@ -1,0 +1,33 @@
+---
+import BaseLayout from "@layouts/BaseLayout.astro";
+
+import Header from "@components/header.astro";
+import Footer from "@components/footer.astro";
+//import Posts from "@components/all-posts.astro";
+import Breadcrumbs from "@components/breadcrumbs.astro";
+import { getCollection } from "astro:content";
+import type { GetStaticPathsOptions, Page,  } from 'astro';
+
+export async function getStaticPaths(options: GetStaticPathsOptions) {
+  const { paginate } = options;
+  let articles = await getCollection("articles")
+  articles.sort((a, b) => {
+    let date1 = a.data.date;
+    let date2 = b.data.date;
+    return date1 > date2 ? -1 : 1
+})
+  return paginate(articles, { pageSize: 6 });
+}
+const { page } = Astro.props;
+---
+
+
+<BaseLayout title = "Статьи">
+    <Header />
+        <div class="wrapper">
+          <Breadcrumbs paths={[]}, last="Статьи">
+        </div>
+        <Map />
+    <Footer />
+</BaseLayout>
+

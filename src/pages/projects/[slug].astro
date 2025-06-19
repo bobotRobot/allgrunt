@@ -1,0 +1,15 @@
+---
+import BaseLayout from '@layouts/BaseLayout.astro';
+
+const {post} = Astro.props;
+---
+
+<BaseLayout>
+  <section class="py-16 bg-white">
+    <div class="container mx-auto px-4 max-w-4xl">
+      <h2 class="text-3xl font-bold mb-4">{post.title}</h2>
+      <p class="text-stone-600 mb-6">{post.description}</p>
+      <div class="prose" set:html={post.body}></div>
+    </div>
+  </section>
+</BaseLayout>
