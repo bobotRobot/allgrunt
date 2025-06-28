@@ -5,7 +5,7 @@ const { equipment } = Astro.props;
 const { title, description, category, pricePerDay, pricePerHour, image, available } = equipment.data;
 ---
 
-<div class="equipment-card bg-white rounded-xl overflow-hidden shadow-md border border-stone-100">
+<div class="equipment-card bg-white overflow-hidden shadow-lg border border-stone-100 h-full flex flex-col">
   <div class="relative">
     <img src={image} alt={title} class="w-full h-48 object-cover">
     <div class="absolute top-4 right-4">
@@ -17,7 +17,7 @@ const { title, description, category, pricePerDay, pricePerHour, image, availabl
     </div>
   </div>
   
-  <div class="p-6">
+  <div class="p-6 flex flex-col flex-grow">
     <div class="flex justify-between items-start mb-3">
       <div>
         <span class="text-xs text-orange-600 font-medium bg-orange-50 px-2 py-1 rounded">{category}</span>
@@ -25,7 +25,7 @@ const { title, description, category, pricePerDay, pricePerHour, image, availabl
       </div>
     </div>
     
-    <p class="text-stone-600 mb-4">{description}</p>
+    <p class="text-stone-600 mb-4 flex-grow">{description}</p>
     
     <div class="space-y-2 mb-4">
       <div class="flex justify-between items-center">
@@ -40,15 +40,15 @@ const { title, description, category, pricePerDay, pricePerHour, image, availabl
       )}
     </div>
     
-    <div class="flex space-x-2">
+    <div class="flex space-x-2 mt-auto">
       <a 
         href={`/equipment/${equipment.slug}`} 
-        class="flex-1 bg-stone-100 hover:bg-stone-200 text-stone-800 font-medium py-2 px-4 rounded-lg transition duration-300 text-center"
+        class="flex-1 bg-stone-100 hover:bg-stone-200 text-stone-800 font-medium py-2 px-4 transition duration-300 text-center"
       >
         Подробнее
       </a>
       <button 
-        class="flex-1 bg-orange-600 hover:bg-orange-700 text-white font-medium py-2 px-4 rounded-lg transition duration-300"
+        class="flex-1 bg-orange-600 hover:bg-orange-700 text-white font-medium py-2 px-4 transition duration-300"
         onclick="openRentalModal('{title}')"
       >
         Арендовать
