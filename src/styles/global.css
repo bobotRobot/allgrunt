@@ -210,16 +210,11 @@
   box-shadow: 0 8px 20px -5px rgba(0, 0, 0, 0.1);
 }
 
-/* Логотип */
+/* Логотип - убираем эффект увеличения */
 .logo-container {
   display: flex;
   align-items: center;
   color: var(--stone-700);
-  transition: all 0.3s ease;
-}
-
-.logo-container:hover {
-  transform: scale(1.05);
 }
 
 /* Герой секция */
