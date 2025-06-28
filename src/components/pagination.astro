@@ -1,0 +1,113 @@
+---
+interface Props {
+  currentPage: number;
+  totalPages: number;
+  baseUrl: string;
+}
+
+const { currentPage, totalPages, baseUrl } = Astro.props;
+
+// Генерируем массив страниц для отображения
+const getPageNumbers = () => {
+  const pages = [];
+  const maxVisible = 5;
+  
+  if (totalPages <= maxVisible) {
+    for (let i = 1; i <= totalPages; i++) {
+      pages.push(i);
+    }
+  } else {
+    if (currentPage <= 3) {
+      for (let i = 1; i <= 4; i++) {
+        pages.push(i);
+      }
+      pages.push('...');
+      pages.push(totalPages);
+    } else if (currentPage >= totalPages - 2) {
+      pages.push(1);
+      pages.push('...');
+      for (let i = totalPages - 3; i <= totalPages; i++) {
+        pages.push(i);
+      }
+    } else {
+      pages.push(1);
+      pages.push('...');
+      for (let i = currentPage - 1; i <= currentPage + 1; i++) {
+        pages.push(i);
+      }
+      pages.push('...');
+      pages.push(totalPages);
+    }
+  }
+  
+  return pages;
+};
+
+const pageNumbers = getPageNumbers();
+---
+
+{totalPages > 1 && (
+  <nav class="flex justify-center items-center space-x-2 mt-12" aria-label="Пагинация">
+    <!-- Предыдущая страница -->
+    {currentPage > 1 ? (
+      <a 
+        href={currentPage === 2 ? baseUrl : `${baseUrl}/page/${currentPage - 1}`}
+        class="pagination-btn bg-white hover:bg-orange-50 text-stone-600 hover:text-orange-600 border border-stone-300 hover:border-orange-300 px-4 py-2 rounded-lg transition duration-300 flex items-center"
+        aria-label="Предыдущая страница"
+      >
+        <i class="fas fa-chevron-left mr-2"></i>
+        Назад
+      </a>
+    ) : (
+      <span class="pagination-btn bg-stone-100 text-stone-400 border border-stone-200 px-4 py-2 rounded-lg cursor-not-allowed flex items-center">
+        <i class="fas fa-chevron-left mr-2"></i>
+        Назад
+      </span>
+    )}
+
+    <!-- Номера страниц -->
+    <div class="flex space-x-1">
+      {pageNumbers.map((page) => (
+        page === '...' ? (
+          <span class="px-3 py-2 text-stone-500">...</span>
+        ) : page === currentPage ? (
+          <span class="pagination-btn bg-orange-600 text-white border border-orange-600 px-4 py-2 rounded-lg font-semibold">
+            {page}
+          </span>
+        ) : (
+          <a 
+            href={page === 1 ? baseUrl : `${baseUrl}/page/${page}`}
+            class="pagination-btn bg-white hover:bg-orange-50 text-stone-600 hover:text-orange-600 border border-stone-300 hover:border-orange-300 px-4 py-2 rounded-lg transition duration-300"
+          >
+            {page}
+          </a>
+        )
+      ))}
+    </div>
+
+    <!-- Следующая страница -->
+    {currentPage < totalPages ? (
+      <a 
+        href={`${baseUrl}/page/${currentPage + 1}`}
+        class="pagination-btn bg-white hover:bg-orange-50 text-stone-600 hover:text-orange-600 border border-stone-300 hover:border-orange-300 px-4 py-2 rounded-lg transition duration-300 flex items-center"
+        aria-label="Следующая страница"
+      >
+        Вперед
+        <i class="fas fa-chevron-right ml-2"></i>
+      </a>
+    ) : (
+      <span class="pagination-btn bg-stone-100 text-stone-400 border border-stone-200 px-4 py-2 rounded-lg cursor-not-allowed flex items-center">
+        Вперед
+        <i class="fas fa-chevron-right ml-2"></i>
+      </span>
+    )}
+  </nav>
+)}
+
+<style>
+  .pagination-btn {
+    min-width: 44px;
+    text-align: center;
+    font-weight: 500;
+  }
+</style>

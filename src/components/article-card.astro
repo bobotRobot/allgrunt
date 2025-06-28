@@ -2,22 +2,33 @@
 import type { CollectionEntry } from 'astro:content';
 
 const { article } = Astro.props;
-
 const { title, description, date, imageSrc } = article.data;
-console.log(article);
+
+// Изображение по умолчанию, если не указано
+const articleImage = imageSrc || "https://images.unsplash.com/photo-1605000797499-95a51c5269ae?ixlib=rb-4.0.3&auto=format&fit=crop&w=1471&q=80";
 ---
 
-<div class="article-card bg-white rounded-xl overflow-hidden shadow-md border border-stone-100">
-  <img src="https://images.unsplash.com/photo-1605000797499-95a51c5269ae?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1471&q=80" alt="Статья 1" class="w-full h-48 object-cover">
+<div class="article-card bg-white rounded-2xl overflow-hidden shadow-lg border border-stone-100 group">
+  <img 
+    src={articleImage} 
+    alt={title} 
+    class="w-full h-48 object-cover group-hover:scale-105 transition-transform duration-300"
+  >
   <div class="p-6">
-      <div class="flex items-center text-sm text-stone-500 mb-3">
-          <i class="far fa-calendar-alt mr-2 text-orange-500"></i>
-          <span>{new Date(date).toLocaleDateString('ru-RU')}</span>
-      </div>
-      <h3 class="text-xl font-semibold mb-3 text-stone-800">{title}</h3>
-      <p class="text-stone-600 mb-4">Обзор современных технологий укрепления грунтов для строительных нужд.</p>
-      <a href={`/articles/${article.slug}`} class="text-orange-600 font-medium hover:text-orange-700 transition duration-300 inline-flex items-center">
-          Читать далее
-          <i class="fas fa-arrow-right ml-2"></i>
-      </a>
+    <div class="flex items-center text-sm text-stone-500 mb-3">
+      <i class="far fa-calendar-alt mr-2 text-orange-500"></i>
+      <span>{new Date(date).toLocaleDateString('ru-RU')}</span>
+    </div>
+    <h3 class="text-xl font-bold mb-3 text-stone-800 group-hover:text-orange-600 transition-colors duration-300">
+      {title}
+    </h3>
+    <p class="text-stone-600 mb-4 leading-relaxed">{description}</p>
+    <a 
+      href={`/articles/${article.slug}`} 
+      class="text-orange-600 font-semibold hover:text-orange-700 transition duration-300 inline-flex items-center"
+    >
+      Читать далее
+      <i class="fas fa-arrow-right ml-2"></i>
+    </a>
   </div>
+</div>

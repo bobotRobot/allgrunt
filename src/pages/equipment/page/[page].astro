@@ -24,7 +24,9 @@ const { data: equipment, currentPage, lastPage } = page;
       <ol class="flex text-stone-600 text-sm">
         <li><a href="/" class="breadcrumb-link hover:text-orange-600">Главная</a></li>
         <li class="mx-2">/</li>
-        <li class="text-stone-900">Аренда спецтехники</li>
+        <li><a href="/equipment" class="breadcrumb-link hover:text-orange-600">Аренда спецтехники</a></li>
+        <li class="mx-2">/</li>
+        <li class="text-stone-900">Страница {currentPage}</li>
       </ol>
     </div>
   </nav>
@@ -47,62 +49,12 @@ const { data: equipment, currentPage, lastPage } = page;
         ))}
       </div>
 
-      {equipment.length === 0 && (
-        <div class="text-center py-12">
-          <div class="max-w-md mx-auto">
-            <div class="w-24 h-24 bg-orange-100 rounded-full flex items-center justify-center mx-auto mb-6">
-              <i class="fas fa-truck text-orange-500 text-3xl"></i>
-            </div>
-            <h3 class="text-xl font-semibold text-stone-800 mb-3">Информация о технике скоро появится</h3>
-            <p class="text-stone-600">Мы работаем над наполнением этого раздела</p>
-          </div>
-        </div>
-      )}
-
       <!-- Пагинация -->
       <Pagination 
         currentPage={currentPage} 
         totalPages={lastPage} 
         baseUrl="/equipment" 
       />
-
-      <!-- Преимущества аренды -->
-      <div class="gradient-card bg-white rounded-3xl p-8 md:p-12 shadow-xl mt-16">
-        <h2 class="text-3xl md:text-4xl font-bold text-gradient mb-8 text-center">Преимущества аренды у нас</h2>
-        <div class="grid md:grid-cols-2 lg:grid-cols-4 gap-8">
-          <div class="text-center group">
-            <div class="icon-wrapper w-20 h-20 bg-orange-100 rounded-3xl flex items-center justify-center mx-auto mb-6 group-hover:scale-110 transition-transform duration-300">
-              <i class="fas fa-tools text-orange-500 text-2xl"></i>
-            </div>
-            <h3 class="font-bold text-lg mb-3 text-stone-800">Техническое обслуживание</h3>
-            <p class="text-stone-600 leading-relaxed">Вся техника проходит регулярное ТО и готова к работе</p>
-          </div>
-          
-          <div class="text-center group">
-            <div class="icon-wrapper w-20 h-20 bg-orange-100 rounded-3xl flex items-center justify-center mx-auto mb-6 group-hover:scale-110 transition-transform duration-300">
-              <i class="fas fa-shipping-fast text-orange-500 text-2xl"></i>
-            </div>
-            <h3 class="font-bold text-lg mb-3 text-stone-800">Быстрая доставка</h3>
-            <p class="text-stone-600 leading-relaxed">Доставляем технику на объект в кратчайшие сроки</p>
-          </div>
-          
-          <div class="text-center group">
-            <div class="icon-wrapper w-20 h-20 bg-orange-100 rounded-3xl flex items-center justify-center mx-auto mb-6 group-hover:scale-110 transition-transform duration-300">
-              <i class="fas fa-user-tie text-orange-500 text-2xl"></i>
-            </div>
-            <h3 class="font-bold text-lg mb-3 text-stone-800">Опытные операторы</h3>
-            <p class="text-stone-600 leading-relaxed">Предоставляем квалифицированных машинистов</p>
-          </div>
-          
-          <div class="text-center group">
-            <div class="icon-wrapper w-20 h-20 bg-orange-100 rounded-3xl flex items-center justify-center mx-auto mb-6 group-hover:scale-110 transition-transform duration-300">
-              <i class="fas fa-shield-alt text-orange-500 text-2xl"></i>
-            </div>
-            <h3 class="font-bold text-lg mb-3 text-stone-800">Страхование</h3>
-            <p class="text-stone-600 leading-relaxed">Вся техника застрахована от поломок и ДТП</p>
-          </div>
-        </div>
-      </div>
     </div>
   </main>
 

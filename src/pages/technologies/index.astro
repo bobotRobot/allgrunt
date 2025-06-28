@@ -3,13 +3,20 @@ import BaseLayout from '@layouts/BaseLayout.astro';
 import Header from '@components/header.astro';
 import Footer from '@components/footer.astro';
 import TechnologyCard from '@components/technology-card.astro';
+import Pagination from '@components/pagination.astro';
 import { getCollection } from 'astro:content';
 
-const allTechnologies = await getCollection('technologies').then((technologies) =>
-  [...technologies].sort(
-    (a, b) => new Date(b.data.date).getTime() - new Date(a.data.date).getTime()
-  )
-);
+export async function getStaticPaths({ paginate }) {
+  const allTechnologies = await getCollection('technologies').then((technologies) =>
+    [...technologies].sort(
+      (a, b) => new Date(b.data.date).getTime() - new Date(a.data.date).getTime()
+    )
+  );
+  return paginate(allTechnologies, { pageSize: 6 });
+}
+
+const { page } = Astro.props;
+const { data: technologies, currentPage, lastPage } = page;
 ---
 
 <BaseLayout>
@@ -19,69 +26,83 @@ const allTechnologies = await getCollection('technologies').then((technologies) 
   <nav class="bg-white border-b border-stone-200 py-3">
     <div class="container mx-auto px-4">
       <ol class="flex text-stone-600 text-sm">
-        <li><a href="/" class="hover:text-orange-600">Главная</a></li>
+        <li><a href="/" class="breadcrumb-link hover:text-orange-600">Главная</a></li>
         <li class="mx-2">/</li>
         <li class="text-stone-900">Технологии</li>
       </ol>
     </div>
   </nav>
 
-  <main class="bg-stone-50 py-12">
+  <main class="bg-stone-50 py-12 section-bg-pattern">
     <div class="container mx-auto px-4">
-      <div class="text-center mb-12">
-        <h1 class="text-4xl font-bold text-stone-800 mb-4">Технологии стабилизации грунтов</h1>
-        <p class="text-stone-600 max-w-3xl mx-auto text-lg">
+      <div class="text-center mb-12 animate-fade-in-up">
+        <h1 class="text-4xl md:text-5xl font-bold text-gradient mb-6">Технологии стабилизации грунтов</h1>
+        <p class="text-stone-600 max-w-3xl mx-auto text-lg leading-relaxed">
           Инновационные методы укрепления грунтов для различных сфер применения. 
           Мы используем современные технологии и проверенные решения для достижения максимального результата.
         </p>
+        <div class="w-24 h-1 bg-gradient-to-r from-orange-500 to-orange-600 mx-auto mt-6"></div>
       </div>
       
       <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
-        {allTechnologies.map((technology) => (
+        {technologies.map((technology) => (
           <TechnologyCard technology={technology} />
         ))}
       </div>
       
-      {allTechnologies.length === 0 && (
+      {technologies.length === 0 && (
         <div class="text-center py-12">
-          <p class="text-stone-600 text-lg">Информация о технологиях скоро появится</p>
+          <div class="max-w-md mx-auto">
+            <div class="w-24 h-24 bg-orange-100 rounded-full flex items-center justify-center mx-auto mb-6">
+              <i class="fas fa-cogs text-orange-500 text-3xl"></i>
+            </div>
+            <h3 class="text-xl font-semibold text-stone-800 mb-3">Информация о технологиях скоро появится</h3>
+            <p class="text-stone-600">Мы работаем над наполнением этого раздела</p>
+          </div>
         </div>
       )}
 
+      <!-- Пагинация -->
+      <Pagination 
+        currentPage={currentPage} 
+        totalPages={lastPage} 
+        baseUrl="/technologies" 
+      />
+
       <!-- Преимущества наших технологий -->
-      <div class="bg-white rounded-xl p-8 mt-16">
-        <h2 class="text-2xl font-bold text-stone-800 mb-6 text-center">Преимущества наших технологий</h2>
-        <div class="grid md:grid-cols-2 lg:grid-cols-4 gap-6">
-          <div class="text-center">
-            <div class="w-16 h-16 bg-orange-100 rounded-full flex items-center justify-center mx-auto mb-4">
+      <div class="gradient-card bg-white rounded-3xl p-8 md:p-12 shadow-xl mt-16">
+        <h2 class="text-3xl md:text-4xl font-bold text-gradient mb-8 text-center">Преимущества наших технологий</h2>
+        <div class="grid md:grid-cols-2 lg:grid-cols-4 gap-8">
+          <div class="text-center group">
+            <div class="icon-wrapper w-20 h-20 bg-orange-100 rounded-3xl flex items-center justify-center mx-auto mb-6 group-hover:scale-110 transition-transform duration-300">
               <i class="fas fa-award text-orange-500 text-2xl"></i>
             </div>
-            <h3 class="font-semibold mb-2">Высокое качество</h3>
-            <p class="text-stone-600 text-sm">Используем только проверенные материалы и технологии</p>
+            <h3 class="font-bold text-lg mb-3 text-stone-800">Высокое качество</h3>
+            <p class="text-stone-600 leading-relaxed">Используем только проверенные материалы и технологии</p>
           </div>
           
-          <div class="text-center">
-            <div class="w-16 h-16 bg-orange-100 rounded-full flex items-center justify-center mx-auto mb-4">
+          <div class="text-center group">
+            <div class="icon-wrapper w-20 h-20 bg-orange-100 rounded-3xl flex items-center justify-center mx-auto mb-6 group-hover:scale-110 transition-transform duration-300">
               <i class="fas fa-leaf text-orange-500 text-2xl"></i>
             </div>
-            <h3 class="font-semibold mb-2">Экологичность</h3>
-            <p class="text-stone-600 text-sm">Безопасные для окружающей среды решения</p>
+            <h3 class="font-bold text-lg mb-3 text-stone-800">Экологичность</h3>
+            <p class="text-stone-600 leading-relaxed">Безопасные для окружающей среды решения</p>
           </div>
           
-          <div class="text-center">
-            <div class="w-16 h-16 bg-orange-100 rounded-full flex items-center justify-center mx-auto mb-4">
+          <div class="text-center group">
+            <div class="icon-wrapper w-20 h-20 bg-orange-100 rounded-3xl flex items-center justify-center mx-auto mb-6 group-hover:scale-110 transition-transform duration-300">
               <i class="fas fa-clock text-orange-500 text-2xl"></i>
             </div>
-            <h3 class="font-semibold mb-2">Быстрота выполнения</h3>
-            <p class="text-stone-600 text-sm">Оптимизированные процессы и современное оборудование</p>
+            <h3 class="font-bold text-lg mb-3 text-stone-800">Быстрота выполнения</h3>
+            <p class="text-stone-600 leading-relaxed">Оптимизированные процессы и современное оборудование</p>
           </div>
           
-          <div class="text-center">
-            <div class="w-16 h-16 bg-orange-100 rounded-full flex items-center justify-center mx-auto mb-4">
+          <div class="text-center group">
+            <div class="icon-wrapper w-20 h-20 bg-orange-100 rounded-3xl flex items-center justify-center mx-auto mb-6 group-hover:scale-110 transition-transform duration-300">
               <i class="fas fa-chart-line text-orange-500 text-2xl"></i>
             </div>
-            <h3 class="font-semibold mb-2">Долговечность</h3>
-            <p class="text-stone-600 text-sm">Результат сохраняется на долгие годы</p>
+            <h3 class="font-bold text-lg mb-3 text-stone-800">Долговечность</h3>
+            <p class="text-stone-600 leading-relaxed">Результат сохраняется на долгие годы</p>
           </div>
         </div>
       </div>
