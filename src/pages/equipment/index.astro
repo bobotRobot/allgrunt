@@ -6,13 +6,6 @@ import EquipmentCard from '@components/equipment-card.astro';
 import { getCollection } from 'astro:content';
 
 const allEquipment = await getCollection('equipment');
-
-// Группировка по категориям
-const categories = [...new Set(allEquipment.map(eq => eq.data.category))];
-const equipmentByCategory = categories.reduce((acc, category) => {
-  acc[category] = allEquipment.filter(eq => eq.data.category === category);
-  return acc;
-}, {} as Record<string, typeof allEquipment>);
 ---
 
 <BaseLayout>
@@ -39,32 +32,21 @@ const equipmentByCategory = categories.reduce((acc, category) => {
         </p>
       </div>
 
-      <!-- Фильтры по категориям -->
-      <div class="flex flex-wrap justify-center gap-4 mb-12">
-        <button class="category-filter active bg-orange-600 text-white px-4 py-2 rounded-lg font-medium" data-category="all">
-          Все категории
-        </button>
-        {categories.map(category => (
-          <button class="category-filter bg-white text-stone-700 px-4 py-2 rounded-lg font-medium border border-stone-300 hover:bg-stone-50" data-category={category}>
-            {category}
-          </button>
+      <!-- Вся техника -->
+      <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-8 mb-16">
+        {allEquipment.map((item) => (
+          <EquipmentCard equipment={item} />
         ))}
       </div>
 
-      <!-- Техника по категориям -->
-      {Object.entries(equipmentByCategory).map(([category, equipment]) => (
-        <div class="equipment-category mb-16" data-category={category}>
-          <h2 class="text-2xl font-bold text-stone-800 mb-8 border-b border-stone-200 pb-4">{category}</h2>
-          <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
-            {equipment.map((item) => (
-              <EquipmentCard equipment={item} />
-            ))}
-          </div>
+      {allEquipment.length === 0 && (
+        <div class="text-center py-12">
+          <p class="text-stone-600 text-lg">Информация о технике скоро появится</p>
         </div>
-      ))}
+      )}
 
       <!-- Преимущества аренды -->
-      <div class="bg-white rounded-xl p-8 mt-16">
+      <div class="bg-white rounded-xl p-8">
         <h2 class="text-2xl font-bold text-stone-800 mb-6 text-center">Преимущества аренды у нас</h2>
         <div class="grid md:grid-cols-2 lg:grid-cols-4 gap-6">
           <div class="text-center">
@@ -158,33 +140,6 @@ const equipmentByCategory = categories.reduce((acc, category) => {
 </BaseLayout>
 
 <script>
-  // Фильтрация по категориям
-  document.addEventListener('DOMContentLoaded', () => {
-    const filterButtons = document.querySelectorAll('.category-filter');
-    const categories = document.querySelectorAll('.equipment-category');
-    
-    filterButtons.forEach(button => {
-      button.addEventListener('click', () => {
-        const category = button.getAttribute('data-category');
-        
-        // Обновляем активную кнопку
-        filterButtons.forEach(btn => btn.classList.remove('active', 'bg-orange-600', 'text-white'));
-        filterButtons.forEach(btn => btn.classList.add('bg-white', 'text-stone-700'));
-        button.classList.add('active', 'bg-orange-600', 'text-white');
-        button.classList.remove('bg-white', 'text-stone-700');
-        
-        // Показываем/скрываем категории
-        categories.forEach(cat => {
-          if (category === 'all' || cat.getAttribute('data-category') === category) {
-            cat.style.display = 'block';
-          } else {
-            cat.style.display = 'none';
-          }
-        });
-      });
-    });
-  });
-
   // Модальное окно
   function openRentalModal(equipmentName) {
     document.getElementById('equipment-name').value = equipmentName;
@@ -205,4 +160,3 @@ const equipmentByCategory = categories.reduce((acc, category) => {
     this.reset();
   });
 </script>
-</BaseLayout>
