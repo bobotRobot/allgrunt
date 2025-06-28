@@ -34,8 +34,29 @@ const articles = defineCollection({
   }),
 });
 
+const equipment = defineCollection({
+  type: 'content',
+  schema: z.object({
+    title: z.string(),
+    description: z.string(),
+    category: z.string(),
+    pricePerDay: z.number(),
+    pricePerHour: z.number().optional(),
+    specifications: z.object({
+      power: z.string().optional(),
+      weight: z.string().optional(),
+      workingWidth: z.string().optional(),
+      capacity: z.string().optional(),
+    }).optional(),
+    features: z.array(z.string()).optional(),
+    image: z.string(),
+    available: z.boolean().default(true)
+  }),
+});
+
 export const collections = {
   'technologies': technologies,
   'projects': projects,
-  'articles': articles
+  'articles': articles,
+  'equipment': equipment
 };

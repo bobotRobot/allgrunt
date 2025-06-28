@@ -1,0 +1,31 @@
+---
+import EquipmentCard from '@components/equipment-card.astro';
+import { getCollection } from 'astro:content';
+
+const allEquipment = await getCollection('equipment');
+const featuredEquipment = allEquipment.slice(0, 4);
+---
+
+<section id="equipment" class="py-16 bg-white">
+  <div class="container mx-auto px-4">
+    <div class="text-center mb-12">
+      <h2 class="text-3xl font-bold text-stone-800 mb-4">Аренда спецтехники</h2>
+      <p class="text-stone-600 max-w-2xl mx-auto">Современная техника для стабилизации грунтов и дорожных работ</p>
+    </div>
+    
+    <div class="grid md:grid-cols-2 lg:grid-cols-2 gap-8">
+      {featuredEquipment.map((equipment) => (
+        <EquipmentCard equipment={equipment} />
+      ))}
+    </div>
+    
+    <div class="text-center mt-12">
+      <a 
+        href="/equipment" 
+        class="bg-stone-100 hover:bg-stone-200 text-stone-800 font-medium py-3 px-6 rounded-lg border border-stone-300 transition duration-300"
+      >
+        Вся техника
+      </a>
+    </div>
+  </div>
+</section>

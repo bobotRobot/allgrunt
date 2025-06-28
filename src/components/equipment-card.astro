@@ -1,0 +1,58 @@
+---
+import type { CollectionEntry } from 'astro:content';
+
+const { equipment } = Astro.props;
+const { title, description, category, pricePerDay, pricePerHour, image, available } = equipment.data;
+---
+
+<div class="equipment-card bg-white rounded-xl overflow-hidden shadow-md border border-stone-100">
+  <div class="relative">
+    <img src={image} alt={title} class="w-full h-48 object-cover">
+    <div class="absolute top-4 right-4">
+      {available ? (
+        <span class="bg-green-100 text-green-800 text-xs px-2 py-1 rounded-full">Доступно</span>
+      ) : (
+        <span class="bg-red-100 text-red-800 text-xs px-2 py-1 rounded-full">Занято</span>
+      )}
+    </div>
+  </div>
+  
+  <div class="p-6">
+    <div class="flex justify-between items-start mb-3">
+      <div>
+        <span class="text-xs text-orange-600 font-medium bg-orange-50 px-2 py-1 rounded">{category}</span>
+        <h3 class="text-xl font-semibold mt-2 text-stone-800">{title}</h3>
+      </div>
+    </div>
+    
+    <p class="text-stone-600 mb-4">{description}</p>
+    
+    <div class="space-y-2 mb-4">
+      <div class="flex justify-between items-center">
+        <span class="text-stone-600">За сутки:</span>
+        <span class="font-semibold text-stone-800">{pricePerDay.toLocaleString('ru-RU')} ₽</span>
+      </div>
+      {pricePerHour && (
+        <div class="flex justify-between items-center">
+          <span class="text-stone-600">За час:</span>
+          <span class="font-semibold text-stone-800">{pricePerHour.toLocaleString('ru-RU')} ₽</span>
+        </div>
+      )}
+    </div>
+    
+    <div class="flex space-x-2">
+      <a 
+        href={`/equipment/${equipment.slug}`} 
+        class="flex-1 bg-stone-100 hover:bg-stone-200 text-stone-800 font-medium py-2 px-4 rounded-lg transition duration-300 text-center"
+      >
+        Подробнее
+      </a>
+      <button 
+        class="flex-1 bg-orange-600 hover:bg-orange-700 text-white font-medium py-2 px-4 rounded-lg transition duration-300"
+        onclick="openRentalModal('{title}')"
+      >
+        Арендовать
+      </button>
+    </div>
+  </div>
+</div>

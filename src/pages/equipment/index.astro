@@ -1,0 +1,208 @@
+---
+import BaseLayout from '@layouts/BaseLayout.astro';
+import Header from '@components/header.astro';
+import Footer from '@components/footer.astro';
+import EquipmentCard from '@components/equipment-card.astro';
+import { getCollection } from 'astro:content';
+
+const allEquipment = await getCollection('equipment');
+
+// Группировка по категориям
+const categories = [...new Set(allEquipment.map(eq => eq.data.category))];
+const equipmentByCategory = categories.reduce((acc, category) => {
+  acc[category] = allEquipment.filter(eq => eq.data.category === category);
+  return acc;
+}, {} as Record<string, typeof allEquipment>);
+---
+
+<BaseLayout>
+  <Header/>
+  
+  <!-- Breadcrumbs -->
+  <nav class="bg-white border-b border-stone-200 py-3">
+    <div class="container mx-auto px-4">
+      <ol class="flex text-stone-600 text-sm">
+        <li><a href="/" class="hover:text-orange-600">Главная</a></li>
+        <li class="mx-2">/</li>
+        <li class="text-stone-900">Аренда спецтехники</li>
+      </ol>
+    </div>
+  </nav>
+
+  <main class="bg-stone-50 py-12">
+    <div class="container mx-auto px-4">
+      <div class="text-center mb-12">
+        <h1 class="text-4xl font-bold text-stone-800 mb-4">Аренда спецтехники</h1>
+        <p class="text-stone-600 max-w-3xl mx-auto text-lg">
+          Предлагаем в аренду современную технику для стабилизации грунтов, дорожных работ и строительства. 
+          Вся техника проходит регулярное техническое обслуживание и готова к работе.
+        </p>
+      </div>
+
+      <!-- Фильтры по категориям -->
+      <div class="flex flex-wrap justify-center gap-4 mb-12">
+        <button class="category-filter active bg-orange-600 text-white px-4 py-2 rounded-lg font-medium" data-category="all">
+          Все категории
+        </button>
+        {categories.map(category => (
+          <button class="category-filter bg-white text-stone-700 px-4 py-2 rounded-lg font-medium border border-stone-300 hover:bg-stone-50" data-category={category}>
+            {category}
+          </button>
+        ))}
+      </div>
+
+      <!-- Техника по категориям -->
+      {Object.entries(equipmentByCategory).map(([category, equipment]) => (
+        <div class="equipment-category mb-16" data-category={category}>
+          <h2 class="text-2xl font-bold text-stone-800 mb-8 border-b border-stone-200 pb-4">{category}</h2>
+          <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
+            {equipment.map((item) => (
+              <EquipmentCard equipment={item} />
+            ))}
+          </div>
+        </div>
+      ))}
+
+      <!-- Преимущества аренды -->
+      <div class="bg-white rounded-xl p-8 mt-16">
+        <h2 class="text-2xl font-bold text-stone-800 mb-6 text-center">Преимущества аренды у нас</h2>
+        <div class="grid md:grid-cols-2 lg:grid-cols-4 gap-6">
+          <div class="text-center">
+            <div class="w-16 h-16 bg-orange-100 rounded-full flex items-center justify-center mx-auto mb-4">
+              <i class="fas fa-tools text-orange-500 text-2xl"></i>
+            </div>
+            <h3 class="font-semibold mb-2">Техническое обслуживание</h3>
+            <p class="text-stone-600 text-sm">Вся техника проходит регулярное ТО и готова к работе</p>
+          </div>
+          
+          <div class="text-center">
+            <div class="w-16 h-16 bg-orange-100 rounded-full flex items-center justify-center mx-auto mb-4">
+              <i class="fas fa-shipping-fast text-orange-500 text-2xl"></i>
+            </div>
+            <h3 class="font-semibold mb-2">Быстрая доставка</h3>
+            <p class="text-stone-600 text-sm">Доставляем технику на объект в кратчайшие сроки</p>
+          </div>
+          
+          <div class="text-center">
+            <div class="w-16 h-16 bg-orange-100 rounded-full flex items-center justify-center mx-auto mb-4">
+              <i class="fas fa-user-tie text-orange-500 text-2xl"></i>
+            </div>
+            <h3 class="font-semibold mb-2">Опытные операторы</h3>
+            <p class="text-stone-600 text-sm">Предоставляем квалифицированных машинистов</p>
+          </div>
+          
+          <div class="text-center">
+            <div class="w-16 h-16 bg-orange-100 rounded-full flex items-center justify-center mx-auto mb-4">
+              <i class="fas fa-shield-alt text-orange-500 text-2xl"></i>
+            </div>
+            <h3 class="font-semibold mb-2">Страхование</h3>
+            <p class="text-stone-600 text-sm">Вся техника застрахована от поломок и ДТП</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </main>
+
+  <!-- Модальное окно для заявки на аренду -->
+  <div id="rental-modal" class="fixed inset-0 bg-black bg-opacity-50 z-50 hidden">
+    <div class="flex items-center justify-center min-h-screen p-4">
+      <div class="bg-white rounded-xl max-w-md w-full p-6">
+        <div class="flex justify-between items-center mb-4">
+          <h3 class="text-xl font-bold text-stone-800">Заявка на аренду</h3>
+          <button onclick="closeRentalModal()" class="text-stone-400 hover:text-stone-600">
+            <i class="fas fa-times text-xl"></i>
+          </button>
+        </div>
+        
+        <form id="rental-form">
+          <div class="mb-4">
+            <label class="block text-stone-700 mb-2">Техника</label>
+            <input type="text" id="equipment-name" class="w-full px-4 py-2 border border-stone-300 rounded-lg bg-stone-50" readonly>
+          </div>
+          
+          <div class="mb-4">
+            <label class="block text-stone-700 mb-2">Ваше имя</label>
+            <input type="text" required class="w-full px-4 py-2 border border-stone-300 rounded-lg focus:outline-none focus:border-orange-500">
+          </div>
+          
+          <div class="mb-4">
+            <label class="block text-stone-700 mb-2">Телефон</label>
+            <input type="tel" required class="w-full px-4 py-2 border border-stone-300 rounded-lg focus:outline-none focus:border-orange-500">
+          </div>
+          
+          <div class="mb-4">
+            <label class="block text-stone-700 mb-2">Период аренды</label>
+            <select class="w-full px-4 py-2 border border-stone-300 rounded-lg focus:outline-none focus:border-orange-500">
+              <option>1 день</option>
+              <option>3 дня</option>
+              <option>1 неделя</option>
+              <option>1 месяц</option>
+              <option>Другой период</option>
+            </select>
+          </div>
+          
+          <div class="mb-6">
+            <label class="block text-stone-700 mb-2">Комментарий</label>
+            <textarea rows="3" class="w-full px-4 py-2 border border-stone-300 rounded-lg focus:outline-none focus:border-orange-500"></textarea>
+          </div>
+          
+          <button type="submit" class="w-full bg-orange-600 hover:bg-orange-700 text-white font-medium py-3 px-6 rounded-lg transition duration-300">
+            Отправить заявку
+          </button>
+        </form>
+      </div>
+    </div>
+  </div>
+
+  <Footer/>
+</BaseLayout>
+
+<script>
+  // Фильтрация по категориям
+  document.addEventListener('DOMContentLoaded', () => {
+    const filterButtons = document.querySelectorAll('.category-filter');
+    const categories = document.querySelectorAll('.equipment-category');
+    
+    filterButtons.forEach(button => {
+      button.addEventListener('click', () => {
+        const category = button.getAttribute('data-category');
+        
+        // Обновляем активную кнопку
+        filterButtons.forEach(btn => btn.classList.remove('active', 'bg-orange-600', 'text-white'));
+        filterButtons.forEach(btn => btn.classList.add('bg-white', 'text-stone-700'));
+        button.classList.add('active', 'bg-orange-600', 'text-white');
+        button.classList.remove('bg-white', 'text-stone-700');
+        
+        // Показываем/скрываем категории
+        categories.forEach(cat => {
+          if (category === 'all' || cat.getAttribute('data-category') === category) {
+            cat.style.display = 'block';
+          } else {
+            cat.style.display = 'none';
+          }
+        });
+      });
+    });
+  });
+
+  // Модальное окно
+  function openRentalModal(equipmentName) {
+    document.getElementById('equipment-name').value = equipmentName;
+    document.getElementById('rental-modal').classList.remove('hidden');
+    document.body.style.overflow = 'hidden';
+  }
+
+  function closeRentalModal() {
+    document.getElementById('rental-modal').classList.add('hidden');
+    document.body.style.overflow = 'auto';
+  }
+
+  // Обработка формы
+  document.getElementById('rental-form').addEventListener('submit', function(e) {
+    e.preventDefault();
+    alert('Спасибо! Ваша заявка на аренду отправлена. Мы свяжемся с вами в ближайшее время.');
+    closeRentalModal();
+    this.reset();
+  });
+</script>
+</BaseLayout>

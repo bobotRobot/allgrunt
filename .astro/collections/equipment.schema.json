@@ -1,0 +1,68 @@
+{
+  "$ref": "#/definitions/equipment",
+  "definitions": {
+    "equipment": {
+      "type": "object",
+      "properties": {
+        "title": {
+          "type": "string"
+        },
+        "description": {
+          "type": "string"
+        },
+        "category": {
+          "type": "string"
+        },
+        "pricePerDay": {
+          "type": "number"
+        },
+        "pricePerHour": {
+          "type": "number"
+        },
+        "specifications": {
+          "type": "object",
+          "properties": {
+            "power": {
+              "type": "string"
+            },
+            "weight": {
+              "type": "string"
+            },
+            "workingWidth": {
+              "type": "string"
+            },
+            "capacity": {
+              "type": "string"
+            }
+          },
+          "additionalProperties": false
+        },
+        "features": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "image": {
+          "type": "string"
+        },
+        "available": {
+          "type": "boolean",
+          "default": true
+        },
+        "$schema": {
+          "type": "string"
+        }
+      },
+      "required": [
+        "title",
+        "description",
+        "category",
+        "pricePerDay",
+        "image"
+      ],
+      "additionalProperties": false
+    }
+  },
+  "$schema": "http://json-schema.org/draft-07/schema#"
+}

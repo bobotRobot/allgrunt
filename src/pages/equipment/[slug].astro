@@ -1,0 +1,218 @@
+---
+import BaseLayout from '@layouts/BaseLayout.astro';
+import Header from '@components/header.astro';
+import Footer from '@components/footer.astro';
+import { getCollection } from 'astro:content';
+
+export async function getStaticPaths() {
+  const equipment = await getCollection("equipment");
+  return equipment.map((item) => {
+    return {
+      params: { slug: item.slug },
+      props: { equipment: item },
+    };
+  });
+}
+
+const { equipment } = Astro.props;
+const { Content } = await equipment.render();
+const { title, description, category, pricePerDay, pricePerHour, specifications, features, image, available } = equipment.data;
+---
+
+<BaseLayout>
+  <Header/>
+  
+  <!-- Breadcrumbs -->
+  <nav class="bg-white border-b border-stone-200 py-3">
+    <div class="container mx-auto px-4">
+      <ol class="flex text-stone-600 text-sm">
+        <li><a href="/" class="hover:text-orange-600">Главная</a></li>
+        <li class="mx-2">/</li>
+        <li><a href="/equipment" class="hover:text-orange-600">Аренда спецтехники</a></li>
+        <li class="mx-2">/</li>
+        <li class="text-stone-900">{title}</li>
+      </ol>
+    </div>
+  </nav>
+
+  <main class="bg-white py-12">
+    <div class="container mx-auto px-4 max-w-6xl">
+      <div class="grid lg:grid-cols-2 gap-12">
+        <!-- Изображение и основная информация -->
+        <div>
+          <div class="relative mb-6">
+            <img src={image} alt={title} class="w-full h-96 object-cover rounded-xl">
+            <div class="absolute top-4 right-4">
+              {available ? (
+                <span class="bg-green-100 text-green-800 px-3 py-1 rounded-full font-medium">Доступно</span>
+              ) : (
+                <span class="bg-red-100 text-red-800 px-3 py-1 rounded-full font-medium">Занято</span>
+              )}
+            </div>
+          </div>
+          
+          <div class="bg-stone-50 p-6 rounded-xl">
+            <h3 class="text-xl font-bold mb-4 text-stone-800">Стоимость аренды</h3>
+            <div class="space-y-3">
+              <div class="flex justify-between items-center">
+                <span class="text-stone-600">За сутки:</span>
+                <span class="text-2xl font-bold text-orange-600">{pricePerDay.toLocaleString('ru-RU')} ₽</span>
+              </div>
+              {pricePerHour && (
+                <div class="flex justify-between items-center">
+                  <span class="text-stone-600">За час:</span>
+                  <span class="text-xl font-semibold text-stone-800">{pricePerHour.toLocaleString('ru-RU')} ₽</span>
+                </div>
+              )}
+            </div>
+            
+            <button 
+              onclick="openRentalModal('{title}')"
+              class="w-full mt-6 bg-orange-600 hover:bg-orange-700 text-white font-medium py-3 px-6 rounded-lg transition duration-300"
+            >
+              Арендовать технику
+            </button>
+          </div>
+        </div>
+
+        <!-- Описание и характеристики -->
+        <div>
+          <div class="mb-4">
+            <span class="text-sm text-orange-600 font-medium bg-orange-50 px-3 py-1 rounded">{category}</span>
+          </div>
+          
+          <h1 class="text-3xl font-bold text-stone-800 mb-4">{title}</h1>
+          <p class="text-stone-600 text-lg mb-8">{description}</p>
+
+          {specifications && (
+            <div class="mb-8">
+              <h3 class="text-xl font-bold mb-4 text-stone-800">Технические характеристики</h3>
+              <div class="bg-stone-50 p-6 rounded-xl">
+                <div class="grid grid-cols-2 gap-4">
+                  {specifications.power && (
+                    <div>
+                      <span class="text-stone-600">Мощность:</span>
+                      <span class="font-semibold ml-2">{specifications.power}</span>
+                    </div>
+                  )}
+                  {specifications.weight && (
+                    <div>
+                      <span class="text-stone-600">Вес:</span>
+                      <span class="font-semibold ml-2">{specifications.weight}</span>
+                    </div>
+                  )}
+                  {specifications.workingWidth && (
+                    <div>
+                      <span class="text-stone-600">Рабочая ширина:</span>
+                      <span class="font-semibold ml-2">{specifications.workingWidth}</span>
+                    </div>
+                  )}
+                  {specifications.capacity && (
+                    <div>
+                      <span class="text-stone-600">Производительность:</span>
+                      <span class="font-semibold ml-2">{specifications.capacity}</span>
+                    </div>
+                  )}
+                </div>
+              </div>
+            </div>
+          )}
+
+          {features && features.length > 0 && (
+            <div class="mb-8">
+              <h3 class="text-xl font-bold mb-4 text-stone-800">Особенности</h3>
+              <ul class="space-y-2">
+                {features.map(feature => (
+                  <li class="flex items-start">
+                    <i class="fas fa-check text-orange-500 mt-1 mr-3"></i>
+                    <span class="text-stone-600">{feature}</span>
+                  </li>
+                ))}
+              </ul>
+            </div>
+          )}
+
+          <div class="prose max-w-none">
+            <Content />
+          </div>
+        </div>
+      </div>
+    </div>
+  </main>
+
+  <!-- Модальное окно для заявки на аренду -->
+  <div id="rental-modal" class="fixed inset-0 bg-black bg-opacity-50 z-50 hidden">
+    <div class="flex items-center justify-center min-h-screen p-4">
+      <div class="bg-white rounded-xl max-w-md w-full p-6">
+        <div class="flex justify-between items-center mb-4">
+          <h3 class="text-xl font-bold text-stone-800">Заявка на аренду</h3>
+          <button onclick="closeRentalModal()" class="text-stone-400 hover:text-stone-600">
+            <i class="fas fa-times text-xl"></i>
+          </button>
+        </div>
+        
+        <form id="rental-form">
+          <div class="mb-4">
+            <label class="block text-stone-700 mb-2">Техника</label>
+            <input type="text" id="equipment-name" class="w-full px-4 py-2 border border-stone-300 rounded-lg bg-stone-50" readonly>
+          </div>
+          
+          <div class="mb-4">
+            <label class="block text-stone-700 mb-2">Ваше имя</label>
+            <input type="text" required class="w-full px-4 py-2 border border-stone-300 rounded-lg focus:outline-none focus:border-orange-500">
+          </div>
+          
+          <div class="mb-4">
+            <label class="block text-stone-700 mb-2">Телефон</label>
+            <input type="tel" required class="w-full px-4 py-2 border border-stone-300 rounded-lg focus:outline-none focus:border-orange-500">
+          </div>
+          
+          <div class="mb-4">
+            <label class="block text-stone-700 mb-2">Период аренды</label>
+            <select class="w-full px-4 py-2 border border-stone-300 rounded-lg focus:outline-none focus:border-orange-500">
+              <option>1 день</option>
+              <option>3 дня</option>
+              <option>1 неделя</option>
+              <option>1 месяц</option>
+              <option>Другой период</option>
+            </select>
+          </div>
+          
+          <div class="mb-6">
+            <label class="block text-stone-700 mb-2">Комментарий</label>
+            <textarea rows="3" class="w-full px-4 py-2 border border-stone-300 rounded-lg focus:outline-none focus:border-orange-500"></textarea>
+          </div>
+          
+          <button type="submit" class="w-full bg-orange-600 hover:bg-orange-700 text-white font-medium py-3 px-6 rounded-lg transition duration-300">
+            Отправить заявку
+          </button>
+        </form>
+      </div>
+    </div>
+  </div>
+
+  <Footer/>
+</BaseLayout>
+
+<script>
+  // Модальное окно
+  function openRentalModal(equipmentName) {
+    document.getElementById('equipment-name').value = equipmentName;
+    document.getElementById('rental-modal').classList.remove('hidden');
+    document.body.style.overflow = 'hidden';
+  }
+
+  function closeRentalModal() {
+    document.getElementById('rental-modal').classList.add('hidden');
+    document.body.style.overflow = 'auto';
+  }
+
+  // Обработка формы
+  document.getElementById('rental-form').addEventListener('submit', function(e) {
+    e.preventDefault();
+    alert('Спасибо! Ваша заявка на аренду отправлена. Мы свяжемся с вами в ближайшее время.');
+    closeRentalModal();
+    this.reset();
+  });
+</script>
+</BaseLayout>
