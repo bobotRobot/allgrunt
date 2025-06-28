@@ -6,18 +6,26 @@
     "dev": "astro dev",
     "build": "astro build",
     "preview": "astro preview",
-    "astro": "astro"
+    "astro": "astro",
+    "strapi:dev": "cd strapi && npm run develop",
+    "strapi:build": "cd strapi && npm run build",
+    "strapi:start": "cd strapi && npm run start",
+    "dev:all": "concurrently \"npm run dev\" \"npm run strapi:dev\"",
+    "build:all": "npm run strapi:build && npm run build"
   },
   "dependencies": {
     "@tailwindcss/vite": "^4.1.7",
-    "astro": "^5.7.13"
+    "astro": "^5.7.13",
+    "axios": "^1.6.2",
+    "qs": "^6.11.2"
   },
   "devDependencies": {
-    "tailwindcss": "^4.1.7"
+    "tailwindcss": "^4.1.7",
+    "concurrently": "^8.2.2"
   },
-  "description": "```sh npm create astro@latest -- --template minimal ```",
+  "description": "Сайт компании по стабилизации грунтов с CMS Strapi",
   "main": "index.js",
-  "keywords": [],
-  "author": "",
+  "keywords": ["astro", "strapi", "cms", "стабилизация грунтов"],
+  "author": "Альянс",
   "license": "ISC"
 }
