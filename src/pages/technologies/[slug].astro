@@ -1,15 +1,89 @@
 ---
 import BaseLayout from '@layouts/BaseLayout.astro';
+import Header from '@components/header.astro';
+import Footer from '@components/footer.astro';
+import { getCollection } from 'astro:content';
 
-const {post} = Astro.props;
+export async function getStaticPaths() {
+  const technologies = await getCollection("technologies");
+  return technologies.map((technology) => {
+    return {
+      params: { slug: technology.slug },
+      props: { technology },
+    };
+  });
+}
+
+const { technology } = Astro.props;
+const { Content } = await technology.render();
+const { title, description, icon, date } = technology.data;
 ---
 
 <BaseLayout>
-  <section class="py-16 bg-white">
-    <div class="container mx-auto px-4 max-w-4xl">
-      <h2 class="text-3xl font-bold mb-4">{post.title}</h2>
-      <p class="text-stone-600 mb-6">{post.description}</p>
-      <div class="prose" set:html={post.body}></div>
+  <Header/>
+  
+  <!-- Breadcrumbs -->
+  <nav class="bg-white border-b border-stone-200 py-3">
+    <div class="container mx-auto px-4">
+      <ol class="flex text-stone-600 text-sm">
+        <li><a href="/" class="hover:text-orange-600">Главная</a></li>
+        <li class="mx-2">/</li>
+        <li><a href="/technologies" class="hover:text-orange-600">Технологии</a></li>
+        <li class="mx-2">/</li>
+        <li class="text-stone-900">{title}</li>
+      </ol>
     </div>
-  </section>
+  </nav>
+
+  <main class="bg-white py-12">
+    <div class="container mx-auto px-4 max-w-4xl">
+      <div class="mb-6">
+        <div class="flex items-center text-sm text-stone-500 mb-4">
+          <a href="/technologies" class="hover:text-orange-600 flex items-center">
+            <i class="fas fa-arrow-left mr-2"></i>
+            Все технологии
+          </a>
+        </div>
+        
+        <div class="mb-8">
+          <div class="flex items-center mb-6">
+            <div class="w-16 h-16 bg-orange-100 rounded-full flex items-center justify-center mr-4">
+              <i class={`${icon} text-orange-500 text-2xl`}></i>
+            </div>
+            <div>
+              <div class="flex items-center text-sm text-stone-500 mb-2">
+                <i class="far fa-calendar-alt mr-2 text-orange-500"></i>
+                <span>{new Date(date).toLocaleDateString('ru-RU')}</span>
+              </div>
+              <h1 class="text-3xl font-bold text-stone-800">{title}</h1>
+            </div>
+          </div>
+          
+          <p class="text-xl text-stone-600 mb-8">{description}</p>
+        </div>
+
+        <div class="prose max-w-none">
+          <Content />
+        </div>
+
+        <!-- Связанные технологии или призыв к действию -->
+        <div class="bg-stone-50 rounded-xl p-8 mt-12">
+          <div class="text-center">
+            <h3 class="text-xl font-bold text-stone-800 mb-4">Заинтересованы в этой технологии?</h3>
+            <p class="text-stone-600 mb-6">Свяжитесь с нами для получения консультации и расчета стоимости работ</p>
+            <div class="flex flex-col sm:flex-row gap-4 justify-center">
+              <a href="#contact" class="bg-orange-600 hover:bg-orange-700 text-white font-medium py-3 px-6 rounded-lg transition duration-300">
+                Получить консультацию
+              </a>
+              <a href="/projects" class="bg-white hover:bg-stone-100 text-stone-800 font-medium py-3 px-6 rounded-lg border border-stone-300 transition duration-300">
+                Посмотреть проекты
+              </a>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </main>
+  
+  <Footer/>
 </BaseLayout>

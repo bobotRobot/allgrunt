@@ -1,15 +1,130 @@
 ---
 import BaseLayout from '@layouts/BaseLayout.astro';
+import Header from '@components/header.astro';
+import Footer from '@components/footer.astro';
+import { getCollection } from 'astro:content';
 
-const {post} = Astro.props;
+export async function getStaticPaths() {
+  const projects = await getCollection("projects");
+  return projects.map((project) => {
+    return {
+      params: { slug: project.slug },
+      props: { project },
+    };
+  });
+}
+
+const { project } = Astro.props;
+const { Content } = await project.render();
+const { title, description, location, status, image } = project.data;
+
+// Определяем цвет статуса
+const getStatusColor = (status: string) => {
+  switch (status.toLowerCase()) {
+    case 'завершен':
+      return 'bg-green-100 text-green-800';
+    case 'в процессе':
+      return 'bg-blue-100 text-blue-800';
+    case 'планируется':
+      return 'bg-yellow-100 text-yellow-800';
+    default:
+      return 'bg-gray-100 text-gray-800';
+  }
+};
+
+// Изображение по умолчанию, если не указано
+const projectImage = image || "https://images.unsplash.com/photo-1605152276897-4f618f831968?ixlib=rb-4.0.3&auto=format&fit=crop&w=1470&q=80";
 ---
 
 <BaseLayout>
-  <section class="py-16 bg-white">
-    <div class="container mx-auto px-4 max-w-4xl">
-      <h2 class="text-3xl font-bold mb-4">{post.title}</h2>
-      <p class="text-stone-600 mb-6">{post.description}</p>
-      <div class="prose" set:html={post.body}></div>
+  <Header/>
+  
+  <!-- Breadcrumbs -->
+  <nav class="bg-white border-b border-stone-200 py-3">
+    <div class="container mx-auto px-4">
+      <ol class="flex text-stone-600 text-sm">
+        <li><a href="/" class="hover:text-orange-600">Главная</a></li>
+        <li class="mx-2">/</li>
+        <li><a href="/projects" class="hover:text-orange-600">Наши проекты</a></li>
+        <li class="mx-2">/</li>
+        <li class="text-stone-900">{title}</li>
+      </ol>
     </div>
-  </section>
+  </nav>
+
+  <main class="bg-white py-12">
+    <div class="container mx-auto px-4 max-w-6xl">
+      <div class="mb-6">
+        <div class="flex items-center text-sm text-stone-500 mb-4">
+          <a href="/projects" class="hover:text-orange-600 flex items-center">
+            <i class="fas fa-arrow-left mr-2"></i>
+            Все проекты
+          </a>
+        </div>
+        
+        <div class="grid lg:grid-cols-2 gap-12">
+          <!-- Изображение проекта -->
+          <div>
+            <img src={projectImage} alt={title} class="w-full h-96 object-cover rounded-xl mb-6">
+            
+            <!-- Информация о проекте -->
+            <div class="bg-stone-50 p-6 rounded-xl">
+              <h3 class="text-xl font-bold mb-4 text-stone-800">Информация о проекте</h3>
+              <div class="space-y-3">
+                <div class="flex justify-between items-center">
+                  <span class="text-stone-600">Статус:</span>
+                  <span class={`px-3 py-1 rounded-full text-sm font-medium ${getStatusColor(status)}`}>{status}</span>
+                </div>
+                <div class="flex justify-between items-center">
+                  <span class="text-stone-600">Местоположение:</span>
+                  <span class="font-semibold text-stone-800 flex items-center">
+                    <i class="fas fa-map-marker-alt mr-2 text-orange-500"></i>
+                    {location}
+                  </span>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Описание проекта -->
+          <div>
+            <h1 class="text-3xl font-bold text-stone-800 mb-4">{title}</h1>
+            <p class="text-stone-600 text-lg mb-8">{description}</p>
+
+            <div class="prose max-w-none">
+              <Content />
+            </div>
+
+            <!-- Технологии, использованные в проекте -->
+            <div class="bg-stone-50 rounded-xl p-6 mt-8">
+              <h3 class="text-lg font-bold text-stone-800 mb-4">Использованные технологии</h3>
+              <div class="flex flex-wrap gap-2">
+                <span class="bg-orange-100 text-orange-800 px-3 py-1 rounded-full text-sm">Стабилизация грунтов</span>
+                <span class="bg-orange-100 text-orange-800 px-3 py-1 rounded-full text-sm">Цементация</span>
+                <span class="bg-orange-100 text-orange-800 px-3 py-1 rounded-full text-sm">Уплотнение</span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Призыв к действию -->
+        <div class="bg-stone-50 rounded-xl p-8 mt-12">
+          <div class="text-center">
+            <h3 class="text-xl font-bold text-stone-800 mb-4">Заинтересованы в похожем проекте?</h3>
+            <p class="text-stone-600 mb-6">Мы готовы выполнить работы по стабилизации грунтов на вашем объекте</p>
+            <div class="flex flex-col sm:flex-row gap-4 justify-center">
+              <a href="#contact" class="bg-orange-600 hover:bg-orange-700 text-white font-medium py-3 px-6 rounded-lg transition duration-300">
+                Обсудить проект
+              </a>
+              <a href="/technologies" class="bg-white hover:bg-stone-100 text-stone-800 font-medium py-3 px-6 rounded-lg border border-stone-300 transition duration-300">
+                Наши технологии
+              </a>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </main>
+  
+  <Footer/>
 </BaseLayout>
