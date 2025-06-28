@@ -1,32 +1,34 @@
-<header class="gradient-bg shadow-sm">
-  <div class="container mx-auto px-4 py-6">
+<header class="gradient-bg shadow-lg backdrop-blur-sm sticky top-0 z-50">
+  <div class="container mx-auto px-4 py-4">
     <div class="flex justify-between items-center w-full">
-      <a href="/"
-         class="logo-container flex items-center shrink-0">
-            <div class="w-12 h-12 min-w-[88px] min-h-[88px] flex items-center justify-center">
-              <img src="/logo-1.svg">
-            </div>
-          <h1 class="text-xl sm:text-5xl font-bold mx-3 flex">Альянс</h1>
+      <a href="/" class="logo-container flex items-center shrink-0 group">
+        <div class="w-12 h-12 min-w-[88px] min-h-[88px] flex items-center justify-center transition-transform duration-300 group-hover:scale-110">
+          <img src="/logo-1.svg" alt="Логотип Альянс" class="w-full h-full">
+        </div>
+        <h1 class="text-xl sm:text-3xl lg:text-4xl font-bold mx-3 text-gradient">Альянс</h1>
       </a>  
-      <nav class="hidden md:flex space-x-5 whitespace-nowrap">
-        <a href="#about" class="nav-link text-stone-700 hover:text-orange-600 transition duration-300">О компании</a>
-        <a href="/technologies" class="nav-link text-stone-700 hover:text-orange-600 transition duration-300">Технологии</a>
-        <a href="/projects" class="nav-link text-stone-700 hover:text-orange-600 transition duration-300">Проекты</a>
-        <a href="/articles" class="nav-link text-stone-700 hover:text-orange-600 transition duration-300">Статьи</a>
-        <a href="/equipment" class="nav-link text-stone-700 hover:text-orange-600 transition duration-300">Аренда спецтехники</a>
-        <a href="#contact" class="nav-link text-stone-700 hover:text-orange-600 transition duration-300">Контакты</a>
+      
+      <nav class="hidden md:flex space-x-2 whitespace-nowrap">
+        <a href="#about" class="nav-link text-stone-700 hover:text-orange-600 font-medium">О компании</a>
+        <a href="/technologies" class="nav-link text-stone-700 hover:text-orange-600 font-medium">Технологии</a>
+        <a href="/projects" class="nav-link text-stone-700 hover:text-orange-600 font-medium">Проекты</a>
+        <a href="/articles" class="nav-link text-stone-700 hover:text-orange-600 font-medium">Статьи</a>
+        <a href="/equipment" class="nav-link text-stone-700 hover:text-orange-600 font-medium">Аренда техники</a>
+        <a href="#contact" class="nav-link text-stone-700 hover:text-orange-600 font-medium">Контакты</a>
       </nav>
-      <button class="md:hidden text-stone-700 shrink-0" id="menu-toggle">
+      
+      <button class="md:hidden text-stone-700 shrink-0 p-2 rounded-lg hover:bg-stone-100 transition-colors duration-300" id="menu-toggle">
         <i class="fas fa-bars text-2xl"></i>
       </button>
     </div>
-    <div id="mobile-menu" class="hidden md:hidden mt-4 space-y-2">
-      <a href="#about" class="block py-2 px-4 bg-stone-100 rounded text-stone-700 hover:text-orange-600 transition duration-300">О компании</a>
-      <a href="/technologies" class="block py-2 px-4 bg-stone-100 rounded text-stone-700 hover:text-orange-600 transition duration-300">Технологии</a>
-      <a href="/projects" class="block py-2 px-4 bg-stone-100 rounded text-stone-700 hover:text-orange-600 transition duration-300">Проекты</a>
-      <a href="/articles" class="block py-2 px-4 bg-stone-100 rounded text-stone-700 hover:text-orange-600 transition duration-300">Статьи</a>
-      <a href="/equipment" class="block py-2 px-4 bg-stone-100 rounded text-stone-700 hover:text-orange-600 transition duration-300">Аренда спецтехники</a>
-      <a href="#contact" class="block py-2 px-4 bg-stone-100 rounded text-stone-700 hover:text-orange-600 transition duration-300">Контакты</a>
+    
+    <div id="mobile-menu" class="hidden md:hidden mt-4 space-y-2 animate-fade-in-up">
+      <a href="#about" class="block py-3 px-4 bg-white/80 backdrop-blur-sm rounded-lg text-stone-700 hover:text-orange-600 hover:bg-orange-50 transition duration-300 font-medium">О компании</a>
+      <a href="/technologies" class="block py-3 px-4 bg-white/80 backdrop-blur-sm rounded-lg text-stone-700 hover:text-orange-600 hover:bg-orange-50 transition duration-300 font-medium">Технологии</a>
+      <a href="/projects" class="block py-3 px-4 bg-white/80 backdrop-blur-sm rounded-lg text-stone-700 hover:text-orange-600 hover:bg-orange-50 transition duration-300 font-medium">Проекты</a>
+      <a href="/articles" class="block py-3 px-4 bg-white/80 backdrop-blur-sm rounded-lg text-stone-700 hover:text-orange-600 hover:bg-orange-50 transition duration-300 font-medium">Статьи</a>
+      <a href="/equipment" class="block py-3 px-4 bg-white/80 backdrop-blur-sm rounded-lg text-stone-700 hover:text-orange-600 hover:bg-orange-50 transition duration-300 font-medium">Аренда техники</a>
+      <a href="#contact" class="block py-3 px-4 bg-white/80 backdrop-blur-sm rounded-lg text-stone-700 hover:text-orange-600 hover:bg-orange-50 transition duration-300 font-medium">Контакты</a>
     </div>
   </div>
 </header>
