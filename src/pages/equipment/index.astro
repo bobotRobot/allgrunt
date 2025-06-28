@@ -6,13 +6,14 @@ import EquipmentCard from '@components/equipment-card.astro';
 import Pagination from '@components/pagination.astro';
 import { getCollection } from 'astro:content';
 
-export async function getStaticPaths({ paginate }) {
-  const allEquipment = await getCollection('equipment');
-  return paginate(allEquipment, { pageSize: 6 });
-}
+// Получаем всю технику для основной страницы
+const allEquipment = await getCollection('equipment');
 
-const { page = { data: [], currentPage: 1, lastPage: 1 } } = Astro.props;
-const { data: equipment, currentPage, lastPage } = page;
+// Пагинация для основной страницы
+const pageSize = 6;
+const totalPages = Math.ceil(allEquipment.length / pageSize);
+const currentPage = 1;
+const equipment = allEquipment.slice(0, pageSize);
 ---
 
 <BaseLayout>
@@ -60,11 +61,13 @@ const { data: equipment, currentPage, lastPage } = page;
       )}
 
       <!-- Пагинация -->
-      <Pagination 
-        currentPage={currentPage} 
-        totalPages={lastPage} 
-        baseUrl="/equipment" 
-      />
+      {totalPages > 1 && (
+        <Pagination 
+          currentPage={currentPage} 
+          totalPages={totalPages} 
+          baseUrl="/equipment" 
+        />
+      )}
 
       <!-- Преимущества аренды -->
       <div class="gradient-card bg-white rounded-3xl p-8 md:p-12 shadow-xl mt-16">

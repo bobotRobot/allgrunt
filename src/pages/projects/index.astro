@@ -6,13 +6,14 @@ import ProjectCard from '@components/project-card.astro';
 import Pagination from '@components/pagination.astro';
 import { getCollection } from 'astro:content';
 
-export async function getStaticPaths({ paginate }) {
-  const allProjects = await getCollection('projects');
-  return paginate(allProjects, { pageSize: 6 });
-}
+// Получаем все проекты для основной страницы
+const allProjects = await getCollection('projects');
 
-const { page = { data: [], currentPage: 1, lastPage: 1 } } = Astro.props;
-const { data: projects, currentPage, lastPage } = page;
+// Пагинация для основной страницы
+const pageSize = 6;
+const totalPages = Math.ceil(allProjects.length / pageSize);
+const currentPage = 1;
+const projects = allProjects.slice(0, pageSize);
 ---
 
 <BaseLayout>
@@ -60,11 +61,13 @@ const { data: projects, currentPage, lastPage } = page;
       )}
 
       <!-- Пагинация -->
-      <Pagination 
-        currentPage={currentPage} 
-        totalPages={lastPage} 
-        baseUrl="/projects" 
-      />
+      {totalPages > 1 && (
+        <Pagination 
+          currentPage={currentPage} 
+          totalPages={totalPages} 
+          baseUrl="/projects" 
+        />
+      )}
 
       <!-- Призыв к действию -->
       <div class="gradient-card bg-white rounded-3xl p-8 md:p-12 shadow-xl mt-16">

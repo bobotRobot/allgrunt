@@ -6,17 +6,18 @@ import TechnologyCard from '@components/technology-card.astro';
 import Pagination from '@components/pagination.astro';
 import { getCollection } from 'astro:content';
 
-export async function getStaticPaths({ paginate }) {
-  const allTechnologies = await getCollection('technologies').then((technologies) =>
-    [...technologies].sort(
-      (a, b) => new Date(b.data.date).getTime() - new Date(a.data.date).getTime()
-    )
-  );
-  return paginate(allTechnologies, { pageSize: 6 });
-}
+// Получаем все технологии для основной страницы
+const allTechnologies = await getCollection('technologies').then((technologies) =>
+  [...technologies].sort(
+    (a, b) => new Date(b.data.date).getTime() - new Date(a.data.date).getTime()
+  )
+);
 
-const { page = { data: [], currentPage: 1, lastPage: 1 } } = Astro.props;
-const { data: technologies, currentPage, lastPage } = page;
+// Пагинация для основной страницы
+const pageSize = 6;
+const totalPages = Math.ceil(allTechnologies.length / pageSize);
+const currentPage = 1;
+const technologies = allTechnologies.slice(0, pageSize);
 ---
 
 <BaseLayout>
@@ -63,11 +64,13 @@ const { data: technologies, currentPage, lastPage } = page;
       )}
 
       <!-- Пагинация -->
-      <Pagination 
-        currentPage={currentPage} 
-        totalPages={lastPage} 
-        baseUrl="/technologies" 
-      />
+      {totalPages > 1 && (
+        <Pagination 
+          currentPage={currentPage} 
+          totalPages={totalPages} 
+          baseUrl="/technologies" 
+        />
+      )}
 
       <!-- Преимущества наших технологий -->
       <div class="gradient-card bg-white rounded-3xl p-8 md:p-12 shadow-xl mt-16">

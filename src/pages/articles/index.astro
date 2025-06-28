@@ -6,18 +6,18 @@ import { getCollection } from 'astro:content';
 import Card from '@components/article-card.astro';
 import Pagination from '@components/pagination.astro';
 
-export async function getStaticPaths({ paginate }) {
-  const allArticles = await getCollection('articles').then((articles) =>
-    [...articles].sort(
-      (a, b) => new Date(b.data.date).getTime() - new Date(a.data.date).getTime()
-    )
-  );
+// Получаем все статьи для основной страницы
+const allArticles = await getCollection('articles').then((articles) =>
+  [...articles].sort(
+    (a, b) => new Date(b.data.date).getTime() - new Date(a.data.date).getTime()
+  )
+);
 
-  return paginate(allArticles, { pageSize: 6 });
-}
-
-const { page = { data: [], currentPage: 1, lastPage: 1 } } = Astro.props;
-const { data: articles, currentPage, lastPage } = page;
+// Пагинация для основной страницы
+const pageSize = 6;
+const totalPages = Math.ceil(allArticles.length / pageSize);
+const currentPage = 1;
+const articles = allArticles.slice(0, pageSize);
 ---
 
 <BaseLayout>
@@ -63,11 +63,13 @@ const { data: articles, currentPage, lastPage } = page;
       )}
 
       <!-- Пагинация -->
-      <Pagination 
-        currentPage={currentPage} 
-        totalPages={lastPage} 
-        baseUrl="/articles" 
-      />
+      {totalPages > 1 && (
+        <Pagination 
+          currentPage={currentPage} 
+          totalPages={totalPages} 
+          baseUrl="/articles" 
+        />
+      )}
     </div>
   </main>
   
