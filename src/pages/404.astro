@@ -1,0 +1,181 @@
+---
+import BaseLayout from '@layouts/BaseLayout.astro';
+import Header from '@components/header.astro';
+import Footer from '@components/footer.astro';
+---
+
+<BaseLayout>
+  <Header/>
+  
+  <main class="bg-stone-50 py-20 section-bg-pattern min-h-screen flex items-center">
+    <div class="container mx-auto px-4">
+      <div class="max-w-4xl mx-auto text-center">
+        <!-- Большая цифра 404 -->
+        <div class="mb-8 animate-fade-in-up">
+          <h1 class="text-9xl md:text-[12rem] font-bold text-gradient opacity-20 leading-none">404</h1>
+        </div>
+        
+        <!-- Основной контент -->
+        <div class="gradient-card bg-white rounded-3xl p-8 md:p-12 shadow-2xl animate-fade-in-up" style="animation-delay: 0.2s;">
+          <div class="w-24 h-24 bg-orange-100 rounded-full flex items-center justify-center mx-auto mb-8">
+            <i class="fas fa-exclamation-triangle text-orange-500 text-3xl"></i>
+          </div>
+          
+          <h2 class="text-3xl md:text-4xl font-bold text-stone-800 mb-6">
+            Страница не найдена
+          </h2>
+          
+          <p class="text-stone-600 text-lg leading-relaxed mb-8 max-w-2xl mx-auto">
+            К сожалению, запрашиваемая страница не существует или была перемещена. 
+            Возможно, вы перешли по устаревшей ссылке или допустили ошибку в адресе.
+          </p>
+          
+          <!-- Кнопки действий -->
+          <div class="flex flex-col sm:flex-row gap-4 justify-center mb-12">
+            <a 
+              href="/" 
+              class="btn-primary bg-orange-600 hover:bg-orange-700 text-white font-semibold py-4 px-8 rounded-xl transition duration-300 text-lg inline-flex items-center justify-center"
+            >
+              <i class="fas fa-home mr-2"></i>
+              На главную
+            </a>
+            <button 
+              onclick="history.back()" 
+              class="btn-secondary bg-white hover:bg-stone-100 text-stone-800 font-semibold py-4 px-8 rounded-xl border-2 border-stone-200 hover:border-orange-500 transition duration-300 text-lg inline-flex items-center justify-center"
+            >
+              <i class="fas fa-arrow-left mr-2"></i>
+              Назад
+            </button>
+          </div>
+          
+          <!-- Полезные ссылки -->
+          <div class="border-t border-stone-200 pt-8">
+            <h3 class="text-xl font-bold text-stone-800 mb-6">Возможно, вас заинтересует:</h3>
+            <div class="grid md:grid-cols-2 lg:grid-cols-4 gap-4">
+              <a 
+                href="/technologies" 
+                class="p-4 bg-stone-50 hover:bg-orange-50 rounded-xl transition duration-300 group"
+              >
+                <div class="w-12 h-12 bg-orange-100 rounded-xl flex items-center justify-center mx-auto mb-3 group-hover:scale-110 transition-transform duration-300">
+                  <i class="fas fa-cogs text-orange-500"></i>
+                </div>
+                <h4 class="font-semibold text-stone-800 group-hover:text-orange-600 transition-colors duration-300">Технологии</h4>
+                <p class="text-stone-600 text-sm mt-1">Методы стабилизации</p>
+              </a>
+              
+              <a 
+                href="/projects" 
+                class="p-4 bg-stone-50 hover:bg-orange-50 rounded-xl transition duration-300 group"
+              >
+                <div class="w-12 h-12 bg-orange-100 rounded-xl flex items-center justify-center mx-auto mb-3 group-hover:scale-110 transition-transform duration-300">
+                  <i class="fas fa-hard-hat text-orange-500"></i>
+                </div>
+                <h4 class="font-semibold text-stone-800 group-hover:text-orange-600 transition-colors duration-300">Проекты</h4>
+                <p class="text-stone-600 text-sm mt-1">Наши работы</p>
+              </a>
+              
+              <a 
+                href="/equipment" 
+                class="p-4 bg-stone-50 hover:bg-orange-50 rounded-xl transition duration-300 group"
+              >
+                <div class="w-12 h-12 bg-orange-100 rounded-xl flex items-center justify-center mx-auto mb-3 group-hover:scale-110 transition-transform duration-300">
+                  <i class="fas fa-truck text-orange-500"></i>
+                </div>
+                <h4 class="font-semibold text-stone-800 group-hover:text-orange-600 transition-colors duration-300">Техника</h4>
+                <p class="text-stone-600 text-sm mt-1">Аренда спецтехники</p>
+              </a>
+              
+              <a 
+                href="/articles" 
+                class="p-4 bg-stone-50 hover:bg-orange-50 rounded-xl transition duration-300 group"
+              >
+                <div class="w-12 h-12 bg-orange-100 rounded-xl flex items-center justify-center mx-auto mb-3 group-hover:scale-110 transition-transform duration-300">
+                  <i class="fas fa-newspaper text-orange-500"></i>
+                </div>
+                <h4 class="font-semibold text-stone-800 group-hover:text-orange-600 transition-colors duration-300">Статьи</h4>
+                <p class="text-stone-600 text-sm mt-1">Полезная информация</p>
+              </a>
+            </div>
+          </div>
+          
+          <!-- Контактная информация -->
+          <div class="bg-stone-50 rounded-2xl p-6 mt-8">
+            <h3 class="text-lg font-bold text-stone-800 mb-4">Нужна помощь?</h3>
+            <p class="text-stone-600 mb-4">Свяжитесь с нами, и мы поможем найти нужную информацию</p>
+            <div class="flex flex-col sm:flex-row gap-4 justify-center">
+              <a 
+                href="tel:+79616614342" 
+                class="inline-flex items-center justify-center text-orange-600 hover:text-orange-700 font-medium transition duration-300"
+              >
+                <i class="fas fa-phone mr-2"></i>
+                +7 (961) 661-43-42
+              </a>
+              <a 
+                href="mailto:info@allgrunt.ru" 
+                class="inline-flex items-center justify-center text-orange-600 hover:text-orange-700 font-medium transition duration-300"
+              >
+                <i class="fas fa-envelope mr-2"></i>
+                info@allgrunt.ru
+              </a>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </main>
+  
+  <Footer/>
+</BaseLayout>
+
+<style>
+  /* Дополнительные анимации для страницы 404 */
+  @keyframes float {
+    0%, 100% {
+      transform: translateY(0px);
+    }
+    50% {
+      transform: translateY(-10px);
+    }
+  }
+  
+  .animate-float {
+    animation: float 3s ease-in-out infinite;
+  }
+  
+  /* Анимация появления с задержкой */
+  .animate-fade-in-up {
+    opacity: 0;
+    transform: translateY(30px);
+    animation: fadeInUp 0.8s ease-out forwards;
+  }
+  
+  @keyframes fadeInUp {
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+</style>
+
+<script>
+  // Добавляем анимацию при загрузке страницы
+  document.addEventListener('DOMContentLoaded', () => {
+    // Анимация для иконки
+    const icon = document.querySelector('.fas.fa-exclamation-triangle');
+    if (icon) {
+      icon.parentElement.classList.add('animate-float');
+    }
+    
+    // Отслеживание попыток поиска
+    const searchParams = new URLSearchParams(window.location.search);
+    const referrer = document.referrer;
+    
+    // Можно добавить аналитику для отслеживания 404 ошибок
+    console.log('404 Error:', {
+      url: window.location.href,
+      referrer: referrer,
+      timestamp: new Date().toISOString()
+    });
+  });
+</script>
+</BaseLayout>
