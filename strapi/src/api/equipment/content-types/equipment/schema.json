@@ -1,0 +1,83 @@
+{
+  "kind": "collectionType",
+  "collectionName": "equipment",
+  "info": {
+    "singularName": "equipment",
+    "pluralName": "equipment",
+    "displayName": "Техника",
+    "description": "Спецтехника для аренды"
+  },
+  "options": {
+    "draftAndPublish": true
+  },
+  "pluginOptions": {},
+  "attributes": {
+    "title": {
+      "type": "string",
+      "required": true,
+      "maxLength": 255
+    },
+    "description": {
+      "type": "text",
+      "required": true
+    },
+    "content": {
+      "type": "richtext",
+      "required": false
+    },
+    "category": {
+      "type": "enumeration",
+      "enum": ["Ресайклеры", "Стабилизаторы", "Экскаваторы", "Катки", "Другое"],
+      "required": true
+    },
+    "slug": {
+      "type": "uid",
+      "targetField": "title",
+      "required": true
+    },
+    "pricePerDay": {
+      "type": "decimal",
+      "required": true,
+      "min": 0
+    },
+    "pricePerHour": {
+      "type": "decimal",
+      "required": false,
+      "min": 0
+    },
+    "available": {
+      "type": "boolean",
+      "default": true
+    },
+    "featured": {
+      "type": "boolean",
+      "default": false
+    },
+    "image": {
+      "type": "media",
+      "multiple": false,
+      "required": false,
+      "allowedTypes": ["images"]
+    },
+    "gallery": {
+      "type": "media",
+      "multiple": true,
+      "required": false,
+      "allowedTypes": ["images"]
+    },
+    "specifications": {
+      "type": "component",
+      "repeatable": false,
+      "component": "equipment.specifications"
+    },
+    "features": {
+      "type": "json",
+      "required": false
+    },
+    "seo": {
+      "type": "component",
+      "repeatable": false,
+      "component": "shared.seo"
+    }
+  }
+}

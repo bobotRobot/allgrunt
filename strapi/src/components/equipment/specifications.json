@@ -1,0 +1,38 @@
+{
+  "collectionName": "components_equipment_specifications",
+  "info": {
+    "displayName": "Технические характеристики",
+    "description": "Технические характеристики техники"
+  },
+  "options": {},
+  "attributes": {
+    "power": {
+      "type": "string",
+      "required": false
+    },
+    "weight": {
+      "type": "string",
+      "required": false
+    },
+    "workingWidth": {
+      "type": "string",
+      "required": false
+    },
+    "capacity": {
+      "type": "string",
+      "required": false
+    },
+    "fuelConsumption": {
+      "type": "string",
+      "required": false
+    },
+    "maxDepth": {
+      "type": "string",
+      "required": false
+    },
+    "dimensions": {
+      "type": "string",
+      "required": false
+    }
+  }
+}

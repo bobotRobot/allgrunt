@@ -1,47 +1,174 @@
-# Astro Starter Kit: Minimal
+# Сайт компании "Альянс" - Стабилизация грунтов
 
-```sh
-npm create astro@latest -- --template minimal
+Современный сайт компании по стабилизации грунтов, построенный на Astro с CMS Strapi.
+
+## 🚀 Технологии
+
+- **Frontend**: Astro + TypeScript
+- **CMS**: Strapi
+- **Стили**: Tailwind CSS
+- **База данных**: SQLite (разработка) / PostgreSQL (продакшн)
+
+## 📁 Структура проекта
+
 ```
-
-[![Open in StackBlitz](https://developer.stackblitz.com/img/open_in_stackblitz.svg)](https://stackblitz.com/github/withastro/astro/tree/latest/examples/minimal)
-[![Open with CodeSandbox](https://assets.codesandbox.io/github/button-edit-lime.svg)](https://codesandbox.io/p/sandbox/github/withastro/astro/tree/latest/examples/minimal)
-[![Open in GitHub Codespaces](https://github.com/codespaces/badge.svg)](https://codespaces.new/withastro/astro?devcontainer_path=.devcontainer/minimal/devcontainer.json)
-
-> 🧑‍🚀 **Seasoned astronaut?** Delete this file. Have fun!
-
-## 🚀 Project Structure
-
-Inside of your Astro project, you'll see the following folders and files:
-
-```text
 /
-├── public/
-├── src/
-│   └── pages/
-│       └── index.astro
-└── package.json
+├── src/                    # Astro frontend
+│   ├── components/         # Компоненты
+│   ├── layouts/           # Макеты страниц
+│   ├── pages/             # Страницы сайта
+│   ├── lib/               # Утилиты и API
+│   └── styles/            # Стили
+├── strapi/                # Strapi CMS
+│   ├── src/               # Конфигурация Strapi
+│   ├── config/            # Настройки
+│   └── public/            # Статические файлы
+└── public/                # Публичные файлы Astro
 ```
 
-Astro looks for `.astro` or `.md` files in the `src/pages/` directory. Each page is exposed as a route based on its file name.
+## 🛠 Установка и запуск
 
-There's nothing special about `src/components/`, but that's where we like to put any Astro/React/Vue/Svelte/Preact components.
+### Предварительные требования
 
-Any static assets, like images, can be placed in the `public/` directory.
+- Node.js 18+
+- npm или yarn
 
-## 🧞 Commands
+### Установка
 
-All commands are run from the root of the project, from a terminal:
+1. Клонируйте репозиторий:
+```bash
+git clone <repository-url>
+cd allgrunt
+```
 
-| Command                   | Action                                           |
-| :------------------------ | :----------------------------------------------- |
-| `npm install`             | Installs dependencies                            |
-| `npm run dev`             | Starts local dev server at `localhost:4321`      |
-| `npm run build`           | Build your production site to `./dist/`          |
-| `npm run preview`         | Preview your build locally, before deploying     |
-| `npm run astro ...`       | Run CLI commands like `astro add`, `astro check` |
-| `npm run astro -- --help` | Get help using the Astro CLI                     |
+2. Установите зависимости для Astro:
+```bash
+npm install
+```
 
-## 👀 Want to learn more?
+3. Установите зависимости для Strapi:
+```bash
+cd strapi
+npm install
+cd ..
+```
 
-Feel free to check [our documentation](https://docs.astro.build) or jump into our [Discord server](https://astro.build/chat).
+4. Создайте файлы окружения:
+```bash
+cp .env.example .env
+cp strapi/.env.example strapi/.env
+```
+
+### Запуск в режиме разработки
+
+1. Запуск только Astro:
+```bash
+npm run dev
+```
+
+2. Запуск только Strapi:
+```bash
+npm run strapi:dev
+```
+
+3. Запуск обеих систем одновременно:
+```bash
+npm run dev:all
+```
+
+Сайт будет доступен по адресу: http://localhost:4321
+Админ-панель Strapi: http://localhost:1337/admin
+
+## 📝 Управление контентом
+
+### Первоначальная настройка Strapi
+
+1. Откройте http://localhost:1337/admin
+2. Создайте администратора
+3. Настройте коллекции контента
+4. Добавьте первые записи
+
+### Структура контента
+
+- **Технологии**: Методы стабилизации грунтов
+- **Проекты**: Выполненные работы
+- **Статьи**: Новости и экспертные материалы
+- **Техника**: Спецтехника для аренды
+
+## 🔧 Конфигурация
+
+### Переменные окружения
+
+```env
+# .env
+STRAPI_URL=http://localhost:1337
+STRAPI_TOKEN=your_api_token
+
+# strapi/.env
+HOST=0.0.0.0
+PORT=1337
+APP_KEYS="key1,key2"
+# ... другие настройки Strapi
+```
+
+### API интеграция
+
+Используйте готовые функции из `src/lib/strapi.ts`:
+
+```typescript
+import { ArticlesAPI, ProjectsAPI } from '@/lib/strapi';
+
+// Получить все статьи
+const articles = await ArticlesAPI.getAll();
+
+// Получить проект по slug
+const project = await ProjectsAPI.getBySlug('project-slug');
+```
+
+## 🚀 Деплой
+
+### Сборка
+
+```bash
+# Сборка Strapi
+npm run strapi:build
+
+# Сборка Astro
+npm run build
+
+# Сборка всего проекта
+npm run build:all
+```
+
+### Продакшн
+
+1. Настройте базу данных (PostgreSQL)
+2. Установите переменные окружения
+3. Запустите Strapi: `npm run strapi:start`
+4. Разверните Astro на хостинге (Netlify, Vercel, etc.)
+
+## 📚 Разделы сайта
+
+- **Главная**: Обзор услуг и преимуществ
+- **О компании**: История и достижения
+- **Технологии**: Методы стабилизации грунтов
+- **Проекты**: Портфолио выполненных работ
+- **Статьи**: Экспертные материалы и новости
+- **Аренда техники**: Каталог спецтехники
+- **Контакты**: Форма обратной связи
+
+## 🎨 Дизайн
+
+- Современный промышленный стиль
+- Адаптивная верстка
+- Оптимизированные изображения
+- Плавные анимации и переходы
+- Доступность (a11y)
+
+## 📞 Поддержка
+
+Для вопросов по разработке и настройке обращайтесь к команде разработки.
+
+## 📄 Лицензия
+
+Все права защищены © 2025 ООО "Альянс"
