@@ -34,7 +34,9 @@ export default [
     config: {
       enabled: true,
       headers: '*',
-      origin: ['http://localhost:4321', 'http://localhost:3000', 'https://your-domain.com'],
+      origin: ['http://localhost:4321', 'http://localhost:3000', 'http://localhost:4320', 'https://your-domain.com'],
+      methods: ['GET', 'POST', 'PUT', 'PATCH', 'DELETE', 'HEAD', 'OPTIONS'],
+      credentials: true,
     },
   },
   'strapi::poweredBy',

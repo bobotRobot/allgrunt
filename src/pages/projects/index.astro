@@ -4,16 +4,40 @@ import Header from '@components/header.astro';
 import Footer from '@components/footer.astro';
 import ProjectCard from '@components/project-card.astro';
 import Pagination from '@components/pagination.astro';
-import { getCollection } from 'astro:content';
+import { ProjectsAPI, StrapiService } from '@lib/strapi';
 
-// Получаем все проекты для основной страницы
-const allProjects = await getCollection('projects');
-
-// Пагинация для основной страницы
+// Пытаемся получить данные из Strapi, если не получается - используем локальные
+let projects = [];
+let useLocalData = false;
+let totalPages = 1;
 const pageSize = 6;
-const totalPages = Math.ceil(allProjects.length / pageSize);
+
+try {
+  const strapiResponse = await ProjectsAPI.getAll({
+    pagination: { page: 1, pageSize }
+  });
+  
+  if (strapiResponse?.data && Array.isArray(strapiResponse.data)) {
+    projects = StrapiService.transformEntities(strapiResponse.data);
+    totalPages = strapiResponse.meta?.pagination?.pageCount || 1;
+  } else {
+    useLocalData = true;
+  }
+} catch (error) {
+  console.log('Strapi недоступен, используем локальные данные');
+  useLocalData = true;
+}
+
+// Если Strapi недоступен, используем локальные данные
+if (useLocalData) {
+  const { getCollection } = await import('astro:content');
+  const allProjects = await getCollection('projects');
+  
+  totalPages = Math.ceil(allProjects.length / pageSize);
+  projects = allProjects.slice(0, pageSize);
+}
+
 const currentPage = 1;
-const projects = allProjects.slice(0, pageSize);
 ---
 
 <BaseLayout>
@@ -44,7 +68,7 @@ const projects = allProjects.slice(0, pageSize);
       <!-- Все проекты -->
       <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
         {projects.map((project) => (
-          <ProjectCard project={project} />
+          <ProjectCard project={project} useStrapi={!useLocalData} />
         ))}
       </div>
       

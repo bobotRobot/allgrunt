@@ -4,16 +4,40 @@ import Header from '@components/header.astro';
 import Footer from '@components/footer.astro';
 import EquipmentCard from '@components/equipment-card.astro';
 import Pagination from '@components/pagination.astro';
-import { getCollection } from 'astro:content';
+import { EquipmentAPI, StrapiService } from '@lib/strapi';
 
-// Получаем всю технику для основной страницы
-const allEquipment = await getCollection('equipment');
-
-// Пагинация для основной страницы
+// Пытаемся получить данные из Strapi, если не получается - используем локальные
+let equipment = [];
+let useLocalData = false;
+let totalPages = 1;
 const pageSize = 6;
-const totalPages = Math.ceil(allEquipment.length / pageSize);
+
+try {
+  const strapiResponse = await EquipmentAPI.getAll({
+    pagination: { page: 1, pageSize }
+  });
+  
+  if (strapiResponse?.data && Array.isArray(strapiResponse.data)) {
+    equipment = StrapiService.transformEntities(strapiResponse.data);
+    totalPages = strapiResponse.meta?.pagination?.pageCount || 1;
+  } else {
+    useLocalData = true;
+  }
+} catch (error) {
+  console.log('Strapi недоступен, используем локальные данные');
+  useLocalData = true;
+}
+
+// Если Strapi недоступен, используем локальные данные
+if (useLocalData) {
+  const { getCollection } = await import('astro:content');
+  const allEquipment = await getCollection('equipment');
+  
+  totalPages = Math.ceil(allEquipment.length / pageSize);
+  equipment = allEquipment.slice(0, pageSize);
+}
+
 const currentPage = 1;
-const equipment = allEquipment.slice(0, pageSize);
 ---
 
 <BaseLayout>
@@ -44,7 +68,7 @@ const equipment = allEquipment.slice(0, pageSize);
       <!-- Вся техника -->
       <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
         {equipment.map((item) => (
-          <EquipmentCard equipment={item} />
+          <EquipmentCard equipment={item} useStrapi={!useLocalData} />
         ))}
       </div>
 
@@ -184,3 +208,4 @@ const equipment = allEquipment.slice(0, pageSize);
     this.reset();
   });
 </script>
+</BaseLayout>

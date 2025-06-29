@@ -1,13 +1,35 @@
 ---
 import Card from '@components/article-card.astro';
-import { getCollection } from 'astro:content';
-const allArticles = await getCollection('articles', ({ data }) => {
-  return data.date <= new Date();
-}).then((articles) =>
-  [...articles].sort(
-    (a, b) => new Date(b.data.date).getTime() - new Date(a.data.date).getTime()
-  )
-);
+import { ArticlesAPI, StrapiService } from '@lib/strapi.ts';
+
+// Пытаемся получить данные из Strapi, если не получается - используем локальные
+let articles = [];
+let useLocalData = false;
+
+try {
+  const strapiResponse = await ArticlesAPI.getRecent(3);
+  if (strapiResponse?.data && Array.isArray(strapiResponse.data)) {
+    articles = StrapiService.transformEntities(strapiResponse.data);
+  } else {
+    useLocalData = true;
+  }
+} catch (error) {
+  console.log('Strapi недоступен, используем локальные данные');
+  useLocalData = true;
+}
+
+// Если Strapi недоступен, используем локальные данные
+if (useLocalData) {
+  const { getCollection } = await import('astro:content');
+  const allArticles = await getCollection('articles', ({ data }) => {
+    return data.date <= new Date();
+  }).then((articles) =>
+    [...articles].sort(
+      (a, b) => new Date(b.data.date).getTime() - new Date(a.data.date).getTime()
+    )
+  );
+  articles = allArticles.slice(0, 3);
+}
 ---
 
 <section id="articles" class="py-16 bg-stone-50">
@@ -17,10 +39,10 @@ const allArticles = await getCollection('articles', ({ data }) => {
       <p class="text-stone-600 max-w-2xl mx-auto">Экспертные материалы по стабилизации грунтов</p>
     </div>
     <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
-      {allArticles.slice(0, 3).map((article) => ( 
-        <Card article={article} />
+      {articles.slice(0, 3).map((article) => ( 
+        <Card article={article} useStrapi={!useLocalData} />
       ))}
-      </div>
+    </div>
     <div class="text-center mt-12">
       <a href="/articles" class="bg-stone-100 hover:bg-stone-200 text-stone-800 font-medium py-3 px-6 rounded-lg border border-stone-300 transition duration-300">
         Все статьи

@@ -25,6 +25,89 @@ import "@styles/global.css"
       <i class="fas fa-chevron-up"></i>
     </button>
     
-    <script src="@scripts/scripts.js"></script>
+    <script>
+      // Mobile menu toggle
+      document.addEventListener('DOMContentLoaded', () => {
+        const toggle = document.getElementById('menu-toggle');
+        const menu = document.getElementById('mobile-menu');
+
+        if (toggle && menu) {
+          toggle.addEventListener('click', () => {
+            menu.classList.toggle('hidden');
+          });
+        }
+
+        // Smooth scrolling for anchor links
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+          anchor.addEventListener('click', function (e) {
+            e.preventDefault();
+            const targetId = this.getAttribute('href');
+            const targetElement = document.querySelector(targetId);
+            if (targetElement) {
+              window.scrollTo({
+                top: targetElement.offsetTop - 80,
+                behavior: 'smooth'
+              });
+              
+              // Close mobile menu if it's open
+              if (menu && !menu.classList.contains('hidden')) {
+                menu.classList.add('hidden');
+              }
+            }
+          });
+        });
+
+        // Form submission
+        const form = document.querySelector('.contact-form form');
+        if (form) {
+          form.addEventListener('submit', function(e) {
+            e.preventDefault();
+            alert('Спасибо! Ваша заявка отправлена.');
+            //form.reset();
+          });
+        }
+
+        // Back to top button
+        const backToTopButton = document.getElementById('back-to-top');
+        
+        if (backToTopButton) {
+          window.addEventListener('scroll', () => {
+            if (window.scrollY > 300) {
+              backToTopButton.classList.add('show');
+            } else {
+              backToTopButton.classList.remove('show');
+            }
+          });
+
+          backToTopButton.addEventListener('click', () => {
+            window.scrollTo({
+              top: 0,
+              behavior: 'smooth'
+            });
+          });
+        }
+
+        // Global functions for modals
+        /*
+        window.openRentalModal = function(equipmentName) {
+          const modal = document.getElementById('rental-modal');
+          const nameInput = document.getElementById('equipment-name');
+          if (modal && nameInput) {
+            nameInput.value = equipmentName;
+            modal.classList.remove('hidden');
+            document.body.style.overflow = 'hidden';
+          }
+        };
+
+        window.closeRentalModal = function() {
+          const modal = document.getElementById('rental-modal');
+          if (modal) {
+            modal.classList.add('hidden');
+            document.body.style.overflow = 'auto';
+          }
+        };
+        */
+      });
+    </script>
   </body>
 </html>

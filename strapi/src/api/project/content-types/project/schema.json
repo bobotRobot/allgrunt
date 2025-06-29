@@ -4,7 +4,7 @@
   "info": {
     "singularName": "project",
     "pluralName": "projects",
-    "displayName": "Проект",
+    "displayName": "Проекты",
     "description": "Выполненные проекты по стабилизации грунтов"
   },
   "options": {
@@ -14,8 +14,8 @@
   "attributes": {
     "title": {
       "type": "string",
-      "required": true,
-      "maxLength": 255
+      "maxLength": 255,
+      "required": true
     },
     "description": {
       "type": "text",
@@ -31,9 +31,13 @@
     },
     "status": {
       "type": "enumeration",
-      "enum": ["планируется", "в процессе", "завершен"],
+      "required": true,
       "default": "планируется",
-      "required": true
+      "enum": [
+        "планируется",
+        "в процессе",
+        "завершен"
+      ]
     },
     "slug": {
       "type": "uid",
@@ -48,13 +52,17 @@
       "type": "media",
       "multiple": false,
       "required": false,
-      "allowedTypes": ["images"]
+      "allowedTypes": [
+        "images"
+      ]
     },
     "gallery": {
       "type": "media",
       "multiple": true,
       "required": false,
-      "allowedTypes": ["images"]
+      "allowedTypes": [
+        "images"
+      ]
     },
     "startDate": {
       "type": "date",
@@ -64,16 +72,10 @@
       "type": "date",
       "required": false
     },
-    "technologies": {
-      "type": "relation",
-      "relation": "manyToMany",
-      "target": "api::technology.technology",
-      "mappedBy": "projects"
-    },
     "seo": {
       "type": "component",
-      "repeatable": false,
-      "component": "shared.seo"
+      "component": "shared.seo",
+      "repeatable": false
     }
   }
 }

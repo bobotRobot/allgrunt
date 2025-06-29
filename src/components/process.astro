@@ -1,3 +1,75 @@
+---
+import { TechnologiesAPI, StrapiService } from '@lib/strapi';
+
+// Пытаемся получить данные из Strapi, если не получается - используем статичные данные
+let technologies = [];
+let useLocalData = false;
+
+try {
+  // Сначала проверяем подключение к Strapi
+  const isConnected = await StrapiService.checkConnection();
+  
+  if (isConnected) {
+    const strapiResponse = await TechnologiesAPI.getFeatured(6);
+    if (strapiResponse && Array.isArray(strapiResponse)) {
+      technologies = StrapiService.transformEntities(strapiResponse);
+      console.log('Loaded technologies from Strapi:', technologies.length);
+    } else {
+      console.log('No featured technologies found in Strapi, using local data');
+      useLocalData = true;
+    }
+  } else {
+    console.log('Strapi not available, using local data');
+    useLocalData = true;
+  }
+} catch (error) {
+  console.log('Strapi error, using local data:', error.message);
+  useLocalData = true;
+}
+
+// Если Strapi недоступен, используем статичные данные
+if (useLocalData) {
+  technologies = [
+    {
+      id: 1,
+      title: "Стабилизация с известью и цементом",
+      description: "Эффективный метод стабилизации грунтов с использованием ресайклера и добавлением извести и цемента. Позволяет значительно улучшить несущую способность грунта.",
+      icon: "fas fa-recycle"
+    },
+    {
+      id: 2,
+      title: "Осушение грунтов",
+      description: "Технологии осушения водонасыщенных грунтов для последующих земляных работ. Снижение уровня грунтовых вод и улучшение строительных свойств грунта.",
+      icon: "fas fa-tint"
+    },
+    {
+      id: 3,
+      title: "Основания под бетонные полы",
+      description: "Подготовка оснований для бетонных полов промышленных и складских сооружений. Обеспечение ровной и прочной поверхности для интенсивных нагрузок.",
+      icon: "fas fa-warehouse"
+    },
+    {
+      id: 4,
+      title: "Дорожное строительство",
+      description: "Создание устойчивых оснований для дорожного полотна. Уменьшение осадки и повышение долговечности дорожного покрытия.",
+      icon: "fas fa-road"
+    },
+    {
+      id: 5,
+      title: "Полимерные стабилизаторы",
+      description: "Использование современных полимерных составов для стабилизации грунтов. Обеспечивает высокую прочность и устойчивость к воздействию влаги.",
+      icon: "fas fa-flask"
+    },
+    {
+      id: 6,
+      title: "Органические стабилизаторы",
+      description: "Экологичные решения на основе органических соединений. Идеально подходят для работ в природоохранных зонах и экологически чувствительных территориях.",
+      icon: "fas fa-leaf"
+    }
+  ];
+}
+---
+
 <section id="process" class="py-20 section-bg-pattern">
   <div class="container mx-auto px-4">
     <div class="text-center mb-16 animate-fade-in-up">
@@ -9,89 +81,28 @@
     </div>
     
     <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
-      <!-- Card 1 -->
-      <div class="technology-card bg-white p-8 shadow-lg hover:shadow-xl transition-all duration-300 group industrial-border">
-        <div class="icon-wrapper w-16 h-16 bg-orange-100 flex items-center justify-center mb-6 group-hover:scale-110 transition-transform duration-300">
-          <i class="fas fa-recycle text-orange-500 text-2xl"></i>
+      {technologies.map((technology) => (
+        <div class="technology-card bg-white p-8 shadow-lg hover:shadow-xl transition-all duration-300 group industrial-border">
+          <div class="icon-wrapper w-16 h-16 bg-orange-100 flex items-center justify-center mb-6 group-hover:scale-110 transition-transform duration-300">
+            <i class={`${technology.icon} text-orange-500 text-2xl`}></i>
+          </div>
+          <h3 class="text-xl font-bold mb-4 text-stone-800 group-hover:text-orange-600 transition-colors duration-300">
+            {technology.title}
+          </h3>
+          <p class="text-stone-600 leading-relaxed">
+            {technology.description}
+          </p>
         </div>
-        <h3 class="text-xl font-bold mb-4 text-stone-800 group-hover:text-orange-600 transition-colors duration-300">
-          Стабилизация с известью и цементом
-        </h3>
-        <p class="text-stone-600 leading-relaxed">
-          Эффективный метод стабилизации грунтов с использованием ресайклера и добавлением извести и цемента. 
-          Позволяет значительно улучшить несущую способность грунта.
-        </p>
-      </div>
-      
-      <!-- Card 2 -->
-      <div class="technology-card bg-white p-8 shadow-lg hover:shadow-xl transition-all duration-300 group industrial-border">
-        <div class="icon-wrapper w-16 h-16 bg-orange-100 flex items-center justify-center mb-6 group-hover:scale-110 transition-transform duration-300">
-          <i class="fas fa-tint text-orange-500 text-2xl"></i>
-        </div>
-        <h3 class="text-xl font-bold mb-4 text-stone-800 group-hover:text-orange-600 transition-colors duration-300">
-          Осушение грунтов
-        </h3>
-        <p class="text-stone-600 leading-relaxed">
-          Технологии осушения водонасыщенных грунтов для последующих земляных работ. 
-          Снижение уровня грунтовых вод и улучшение строительных свойств грунта.
-        </p>
-      </div>
-      
-      <!-- Card 3 -->
-      <div class="technology-card bg-white p-8 shadow-lg hover:shadow-xl transition-all duration-300 group industrial-border">
-        <div class="icon-wrapper w-16 h-16 bg-orange-100 flex items-center justify-center mb-6 group-hover:scale-110 transition-transform duration-300">
-          <i class="fas fa-warehouse text-orange-500 text-2xl"></i>
-        </div>
-        <h3 class="text-xl font-bold mb-4 text-stone-800 group-hover:text-orange-600 transition-colors duration-300">
-          Основания под бетонные полы
-        </h3>
-        <p class="text-stone-600 leading-relaxed">
-          Подготовка оснований для бетонных полов промышленных и складских сооружений. 
-          Обеспечение ровной и прочной поверхности для интенсивных нагрузок.
-        </p>
-      </div>
-      
-      <!-- Card 4 -->
-      <div class="technology-card bg-white p-8 shadow-lg hover:shadow-xl transition-all duration-300 group industrial-border">
-        <div class="icon-wrapper w-16 h-16 bg-orange-100 flex items-center justify-center mb-6 group-hover:scale-110 transition-transform duration-300">
-          <i class="fas fa-road text-orange-500 text-2xl"></i>
-        </div>
-        <h3 class="text-xl font-bold mb-4 text-stone-800 group-hover:text-orange-600 transition-colors duration-300">
-          Дорожное строительство
-        </h3>
-        <p class="text-stone-600 leading-relaxed">
-          Создание устойчивых оснований для дорожного полотна. 
-          Уменьшение осадки и повышение долговечности дорожного покрытия.
-        </p>
-      </div>
-      
-      <!-- Card 5 -->
-      <div class="technology-card bg-white p-8 shadow-lg hover:shadow-xl transition-all duration-300 group industrial-border">
-        <div class="icon-wrapper w-16 h-16 bg-orange-100 flex items-center justify-center mb-6 group-hover:scale-110 transition-transform duration-300">
-          <i class="fas fa-flask text-orange-500 text-2xl"></i>
-        </div>
-        <h3 class="text-xl font-bold mb-4 text-stone-800 group-hover:text-orange-600 transition-colors duration-300">
-          Полимерные стабилизаторы
-        </h3>
-        <p class="text-stone-600 leading-relaxed">
-          Использование современных полимерных составов для стабилизации грунтов. 
-          Обеспечивает высокую прочность и устойчивость к воздействию влаги.
-        </p>
-      </div>
-      
-      <!-- Card 6 -->
-      <div class="technology-card bg-white p-8 shadow-lg hover:shadow-xl transition-all duration-300 group industrial-border">
-        <div class="icon-wrapper w-16 h-16 bg-orange-100 flex items-center justify-center mb-6 group-hover:scale-110 transition-transform duration-300">
-          <i class="fas fa-leaf text-orange-500 text-2xl"></i>
-        </div>
-        <h3 class="text-xl font-bold mb-4 text-stone-800 group-hover:text-orange-600 transition-colors duration-300">
-          Органические стабилизаторы
-        </h3>
-        <p class="text-stone-600 leading-relaxed">
-          Экологичные решения на основе органических соединений. 
-          Идеально подходят для работ в природоохранных зонах и экологически чувствительных территориях.
-        </p>
-      </div>
+      ))}
     </div>
+    
+    {useLocalData && (
+      <div class="text-center mt-8">
+        <p class="text-sm text-stone-500">
+          <i class="fas fa-info-circle mr-2"></i>
+          Отображаются локальные данные (Strapi недоступен)
+        </p>
+      </div>
+    )}
   </div>
 </section>

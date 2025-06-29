@@ -2,22 +2,46 @@
 import BaseLayout from '@layouts/BaseLayout.astro';
 import Header from '@components/header.astro';
 import Footer from '@components/footer.astro';
-import { getCollection } from 'astro:content';
 import Card from '@components/article-card.astro';
 import Pagination from '@components/pagination.astro';
+import { ArticlesAPI, StrapiService } from '@lib/strapi';
 
-// Получаем все статьи для основной страницы
-const allArticles = await getCollection('articles').then((articles) =>
-  [...articles].sort(
-    (a, b) => new Date(b.data.date).getTime() - new Date(a.data.date).getTime()
-  )
-);
-
-// Пагинация для основной страницы
+// Пытаемся получить данные из Strapi, если не получается - используем локальные
+let articles = [];
+let useLocalData = false;
+let totalPages = 1;
 const pageSize = 6;
-const totalPages = Math.ceil(allArticles.length / pageSize);
+
+try {
+  const strapiResponse = await ArticlesAPI.getAll({
+    pagination: { page: 1, pageSize }
+  });
+  
+  if (strapiResponse?.data && Array.isArray(strapiResponse.data)) {
+    articles = StrapiService.transformEntities(strapiResponse.data);
+    totalPages = strapiResponse.meta?.pagination?.pageCount || 1;
+  } else {
+    useLocalData = true;
+  }
+} catch (error) {
+  console.log('Strapi недоступен, используем локальные данные');
+  useLocalData = true;
+}
+
+// Если Strapi недоступен, используем локальные данные
+if (useLocalData) {
+  const { getCollection } = await import('astro:content');
+  const allArticles = await getCollection('articles').then((articles) =>
+    [...articles].sort(
+      (a, b) => new Date(b.data.date).getTime() - new Date(a.data.date).getTime()
+    )
+  );
+  
+  totalPages = Math.ceil(allArticles.length / pageSize);
+  articles = allArticles.slice(0, pageSize);
+}
+
 const currentPage = 1;
-const articles = allArticles.slice(0, pageSize);
 ---
 
 <BaseLayout>
@@ -46,7 +70,7 @@ const articles = allArticles.slice(0, pageSize);
       
       <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
         {articles.map((article) => ( 
-          <Card article={article} />
+          <Card article={article} useStrapi={!useLocalData} />
         ))}
       </div>
       

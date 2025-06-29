@@ -1,8 +1,31 @@
 ---
-import type { CollectionEntry } from 'astro:content';
+interface Props {
+  project: any;
+  useStrapi?: boolean;
+}
 
-const { project } = Astro.props;
-const { title, description, location, status, image } = project.data;
+const { project, useStrapi = false } = Astro.props;
+
+// Определяем поля в зависимости от источника данных
+let title, description, location, status, image, slug;
+
+if (useStrapi) {
+  // Данные из Strapi
+  title = project.title;
+  description = project.description;
+  location = project.location;
+  status = project.status;
+  image = project.image?.url ? `${import.meta.env.STRAPI_URL || 'http://localhost:1337'}${project.image.url}` : null;
+  slug = project.slug;
+} else {
+  // Локальные данные из Astro Content
+  title = project.data.title;
+  description = project.data.description;
+  location = project.data.location;
+  status = project.data.status;
+  image = project.data.image;
+  slug = project.slug;
+}
 
 // Определяем цвет статуса
 const getStatusColor = (status: string) => {
@@ -40,7 +63,7 @@ const projectImage = image || "https://images.unsplash.com/photo-1605152276897-4
           <span>{location}</span>
         </div>
         
-        <a href={`/projects/${project.slug}`} class="text-orange-600 font-semibold hover:text-orange-700 transition duration-300 inline-flex items-center">
+        <a href={`/projects/${slug}`} class="text-orange-600 font-semibold hover:text-orange-700 transition duration-300 inline-flex items-center">
           Подробнее
           <i class="fas fa-arrow-right ml-2"></i>
         </a>
