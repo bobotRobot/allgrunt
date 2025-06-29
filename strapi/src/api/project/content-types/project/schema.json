@@ -1,11 +1,11 @@
 {
   "kind": "collectionType",
-  "collectionName": "articles",
+  "collectionName": "projects",
   "info": {
-    "singularName": "article",
-    "pluralName": "articles",
-    "displayName": "Статьи",
-    "description": "Статьи и новости компании"
+    "singularName": "project",
+    "pluralName": "projects",
+    "displayName": "Проекты",
+    "description": "Выполненные проекты по стабилизации грунтов"
   },
   "options": {
     "draftAndPublish": true
@@ -23,7 +23,21 @@
     },
     "content": {
       "type": "richtext",
+      "required": false
+    },
+    "location": {
+      "type": "string",
       "required": true
+    },
+    "status": {
+      "type": "enumeration",
+      "required": true,
+      "default": "планируется",
+      "enum": [
+        "планируется",
+        "в процессе",
+        "завершен"
+      ]
     },
     "slug": {
       "type": "uid",
@@ -42,19 +56,20 @@
         "images"
       ]
     },
-    "author": {
-      "type": "string",
-      "default": "Редакция",
+    "gallery": {
+      "type": "media",
+      "multiple": true,
+      "required": false,
+      "allowedTypes": [
+        "images"
+      ]
+    },
+    "startDate": {
+      "type": "date",
       "required": false
     },
-    "readTime": {
-      "type": "integer",
-      "required": false,
-      "default": 5,
-      "min": 1
-    },
-    "tags": {
-      "type": "json",
+    "endDate": {
+      "type": "date",
       "required": false
     },
     "seo": {
