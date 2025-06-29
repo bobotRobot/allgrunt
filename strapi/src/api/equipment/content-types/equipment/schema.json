@@ -2,8 +2,8 @@
   "kind": "collectionType",
   "collectionName": "equipment_items",
   "info": {
-    "singularName": "equipment-item",
-    "pluralName": "equipment-items",
+    "singularName": "equipment",
+    "pluralName": "equipment",
     "displayName": "Техника",
     "description": "Спецтехника для аренды"
   },
