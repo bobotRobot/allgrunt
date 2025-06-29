@@ -1,6 +1,6 @@
 {
   "kind": "collectionType",
-  "collectionName": "equipment_items",
+  "collectionName": "equipment",
   "info": {
     "singularName": "equipment",
     "pluralName": "equipment",

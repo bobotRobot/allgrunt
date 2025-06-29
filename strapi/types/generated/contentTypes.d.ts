@@ -415,7 +415,7 @@ export interface ApiArticleArticle extends Struct.CollectionTypeSchema {
 }
 
 export interface ApiEquipmentEquipment extends Struct.CollectionTypeSchema {
-  collectionName: 'equipment_items';
+  collectionName: 'equipment';
   info: {
     singularName: 'equipment';
     pluralName: 'equipment';
