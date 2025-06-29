@@ -1,129 +1,61 @@
-# Strapi CMS для сайта стабилизации грунтов
+# 🚀 Getting started with Strapi
 
-Это Strapi CMS для управления контентом сайта компании по стабилизации грунтов.
+Strapi comes with a full featured [Command Line Interface](https://docs.strapi.io/dev-docs/cli) (CLI) which lets you scaffold and manage your project in seconds.
 
-## Установка и запуск
+### `develop`
 
-1. Установите зависимости:
-```bash
-cd strapi
-npm install
+Start your Strapi application with autoReload enabled. [Learn more](https://docs.strapi.io/dev-docs/cli#strapi-develop)
+
 ```
-
-2. Создайте файл `.env` на основе `.env.example`:
-```bash
-cp .env.example .env
-```
-
-3. Запустите Strapi в режиме разработки:
-```bash
 npm run develop
+# or
+yarn develop
 ```
 
-4. Откройте админ-панель: http://localhost:1337/admin
+### `start`
 
-## Структура контента
+Start your Strapi application with autoReload disabled. [Learn more](https://docs.strapi.io/dev-docs/cli#strapi-start)
 
-### Коллекции
-
-1. **Технологии** (`technologies`)
-   - Название
-   - Описание
-   - Подробный контент
-   - Иконка
-   - Изображение
-   - SEO данные
-
-2. **Проекты** (`projects`)
-   - Название
-   - Описание
-   - Подробный контент
-   - Местоположение
-   - Статус (планируется/в процессе/завершен)
-   - Даты начала и окончания
-   - Изображения (основное + галерея)
-   - Связанные технологии
-   - SEO данные
-
-3. **Статьи** (`articles`)
-   - Заголовок
-   - Описание
-   - Контент
-   - Автор
-   - Время чтения
-   - Теги
-   - Изображение
-   - SEO данные
-
-4. **Техника** (`equipment`)
-   - Название
-   - Описание
-   - Подробный контент
-   - Категория
-   - Цена за день/час
-   - Доступность
-   - Технические характеристики
-   - Особенности
-   - Изображения (основное + галерея)
-   - SEO данные
-
-### Компоненты
-
-1. **SEO** (`shared.seo`)
-   - Meta заголовок
-   - Meta описание
-   - Ключевые слова
-   - Meta изображение
-   - Canonical URL
-
-2. **Технические характеристики** (`equipment.specifications`)
-   - Мощность
-   - Вес
-   - Рабочая ширина
-   - Производительность
-   - Расход топлива
-   - Максимальная глубина
-   - Габариты
-
-## API Endpoints
-
-- GET `/api/technologies` - Все технологии
-- GET `/api/technologies/:id` - Технология по ID
-- GET `/api/projects` - Все проекты
-- GET `/api/projects/:id` - Проект по ID
-- GET `/api/articles` - Все статьи
-- GET `/api/articles/:id` - Статья по ID
-- GET `/api/equipment` - Вся техника
-- GET `/api/equipment/:id` - Техника по ID
-
-## Фильтрация и сортировка
-
-Примеры запросов:
-
-```javascript
-// Получить рекомендуемые технологии
-GET /api/technologies?filters[featured][$eq]=true
-
-// Получить проекты по статусу
-GET /api/projects?filters[status][$eq]=завершен
-
-// Получить доступную технику
-GET /api/equipment?filters[available][$eq]=true
-
-// Сортировка статей по дате
-GET /api/articles?sort=createdAt:desc
-
-// Пагинация
-GET /api/articles?pagination[page]=1&pagination[pageSize]=6
+```
+npm run start
+# or
+yarn start
 ```
 
-## Настройка в продакшене
+### `build`
 
-1. Настройте базу данных (PostgreSQL/MySQL)
-2. Установите переменные окружения
-3. Запустите сборку: `npm run build`
-4. Запустите в продакшене: `npm start`
+Build your admin panel. [Learn more](https://docs.strapi.io/dev-docs/cli#strapi-build)
 
-## Интеграция с Astro
+```
+npm run build
+# or
+yarn build
+```
 
-Для интеграции с Astro используйте файл `src/lib/strapi.ts`, который содержит готовые функции для работы с API.
+## ⚙️ Deployment
+
+Strapi gives you many possible deployment options for your project including [Strapi Cloud](https://cloud.strapi.io). Browse the [deployment section of the documentation](https://docs.strapi.io/dev-docs/deployment) to find the best solution for your use case.
+
+```
+yarn strapi deploy
+```
+
+## 📚 Learn more
+
+- [Resource center](https://strapi.io/resource-center) - Strapi resource center.
+- [Strapi documentation](https://docs.strapi.io) - Official Strapi documentation.
+- [Strapi tutorials](https://strapi.io/tutorials) - List of tutorials made by the core team and the community.
+- [Strapi blog](https://strapi.io/blog) - Official Strapi blog containing articles made by the Strapi team and the community.
+- [Changelog](https://strapi.io/changelog) - Find out about the Strapi product updates, new features and general improvements.
+
+Feel free to check out the [Strapi GitHub repository](https://github.com/strapi/strapi). Your feedback and contributions are welcome!
+
+## ✨ Community
+
+- [Discord](https://discord.strapi.io) - Come chat with the Strapi community including the core team.
+- [Forum](https://forum.strapi.io/) - Place to discuss, ask questions and find answers, show your Strapi project and get feedback or just talk with other Community members.
+- [Awesome Strapi](https://github.com/strapi/awesome-strapi) - A curated list of awesome things related to Strapi.
+
+---
+
+<sub>🤫 Psst! [Strapi is hiring](https://strapi.io/careers).</sub>

@@ -1,8 +1,8 @@
 {
-  "name": "strapi-cms",
+  "name": "strapi",
   "version": "0.1.0",
   "private": true,
-  "description": "CMS для сайта стабилизации грунтов",
+  "description": "A Strapi application",
   "scripts": {
     "build": "strapi build",
     "console": "strapi console",
@@ -35,7 +35,7 @@
     "npm": ">=6.0.0"
   },
   "strapi": {
-    "uuid": "ac26dcfc-06d7-430f-a96d-9d73707251da",
-    "installId": "8776a47f6debabb0dfba2173d64ee1912748f3c3e4ab5dd72b2896f05803f95d"
+    "uuid": "21f236c5-90ef-4a97-a093-da238a89416b",
+    "installId": "ad6e517236b92fca211da24e745ab2fe30276566252c3103f374b8ac016edbb5"
   }
 }
