@@ -1,8 +1,12 @@
 import axios from 'axios';
 import qs from 'qs';
 
+// Получаем переменные окружения
 const STRAPI_URL = import.meta.env.STRAPI_URL || 'http://localhost:1337';
 const STRAPI_TOKEN = import.meta.env.STRAPI_TOKEN;
+
+console.log('Strapi URL:', STRAPI_URL);
+console.log('Strapi Token:', STRAPI_TOKEN ? 'Установлен' : 'Не установлен');
 
 // Создаем экземпляр axios с базовой конфигурацией
 const strapiApi = axios.create({
@@ -11,7 +15,22 @@ const strapiApi = axios.create({
     'Content-Type': 'application/json',
     ...(STRAPI_TOKEN && { Authorization: `Bearer ${STRAPI_TOKEN}` }),
   },
+  timeout: 10000, // 10 секунд таймаут
 });
+
+// Добавляем интерцептор для логирования ошибок
+strapiApi.interceptors.response.use(
+  (response) => response,
+  (error) => {
+    console.error('Strapi API Error:', {
+      url: error.config?.url,
+      status: error.response?.status,
+      message: error.message,
+      data: error.response?.data
+    });
+    return Promise.reject(error);
+  }
+);
 
 // Типы для Strapi данных
 export interface StrapiResponse<T> {
@@ -58,6 +77,40 @@ export interface StrapiImage {
 
 // Функции для работы с API
 export class StrapiService {
+  // Проверка доступности Strapi - используем конкретный эндпоинт
+  static async checkConnection(): Promise<boolean> {
+    try {
+      // Проверяем доступность через эндпоинт users-permissions
+      const response = await axios.get(`${STRAPI_URL}/api/users-permissions/roles`, { 
+        timeout: 5000,
+        headers: {
+          'Content-Type': 'application/json',
+          ...(STRAPI_TOKEN && { Authorization: `Bearer ${STRAPI_TOKEN}` }),
+        }
+      });
+      console.log('Strapi connection successful');
+      return true;
+    } catch (error) {
+      console.error('Strapi connection failed:', error.message);
+      
+      // Дополнительная проверка - пробуем получить любую коллекцию
+      try {
+        await axios.get(`${STRAPI_URL}/api/technologies?pagination[limit]=1`, { 
+          timeout: 5000,
+          headers: {
+            'Content-Type': 'application/json',
+            ...(STRAPI_TOKEN && { Authorization: `Bearer ${STRAPI_TOKEN}` }),
+          }
+        });
+        console.log('Strapi connection successful via technologies endpoint');
+        return true;
+      } catch (secondError) {
+        console.error('Secondary Strapi check also failed:', secondError.message);
+        return false;
+      }
+    }
+  }
+
   // Получение всех записей коллекции
   static async getCollection<T>(
     collection: string,
@@ -75,6 +128,8 @@ export class StrapiService {
     } = {}
   ): Promise<StrapiResponse<StrapiEntity[]>> {
     try {
+      console.log(`Fetching ${collection} from Strapi...`);
+      
       const query = qs.stringify(
         {
           populate: options.populate || '*',
@@ -87,9 +142,10 @@ export class StrapiService {
       );
 
       const response = await strapiApi.get(`/${collection}?${query}`);
+      console.log(`Successfully fetched ${collection}:`, response.data.data?.length || 0, 'items');
       return response.data;
     } catch (error) {
-      console.error(`Error fetching ${collection}:`, error);
+      console.error(`Error fetching ${collection}:`, error.message);
       throw error;
     }
   }
@@ -113,7 +169,7 @@ export class StrapiService {
       const response = await strapiApi.get(`/${collection}/${id}?${query}`);
       return response.data;
     } catch (error) {
-      console.error(`Error fetching ${collection} entry ${id}:`, error);
+      console.error(`Error fetching ${collection} entry ${id}:`, error.message);
       throw error;
     }
   }
@@ -140,7 +196,7 @@ export class StrapiService {
       const data = response.data.data;
       return data.length > 0 ? data[0] : null;
     } catch (error) {
-      console.error(`Error fetching ${collection} by slug ${slug}:`, error);
+      console.error(`Error fetching ${collection} by slug ${slug}:`, error.message);
       return null;
     }
   }
@@ -165,9 +221,9 @@ export class StrapiService {
       );
 
       const response = await strapiApi.get(`/${collection}?${query}`);
-      return response.data.data;
+      return response.data.data || [];
     } catch (error) {
-      console.error(`Error fetching featured ${collection}:`, error);
+      console.error(`Error fetching featured ${collection}:`, error.message);
       return [];
     }
   }

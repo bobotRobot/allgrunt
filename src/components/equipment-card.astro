@@ -1,13 +1,43 @@
 ---
-import type { CollectionEntry } from 'astro:content';
+interface Props {
+  equipment: any;
+  useStrapi?: boolean;
+}
 
-const { equipment } = Astro.props;
-const { title, description, category, pricePerDay, pricePerHour, image, available } = equipment.data;
+const { equipment, useStrapi = false } = Astro.props;
+
+// Определяем поля в зависимости от источника данных
+let title, description, category, pricePerDay, pricePerHour, image, available, slug;
+
+if (useStrapi) {
+  // Данные из Strapi
+  title = equipment.title;
+  description = equipment.description;
+  category = equipment.category;
+  pricePerDay = equipment.pricePerDay;
+  pricePerHour = equipment.pricePerHour;
+  image = equipment.image?.url ? `${import.meta.env.STRAPI_URL || 'http://localhost:1337'}${equipment.image.url}` : null;
+  available = equipment.available;
+  slug = equipment.slug;
+} else {
+  // Локальные данные из Astro Content
+  title = equipment.data.title;
+  description = equipment.data.description;
+  category = equipment.data.category;
+  pricePerDay = equipment.data.pricePerDay;
+  pricePerHour = equipment.data.pricePerHour;
+  image = equipment.data.image;
+  available = equipment.data.available;
+  slug = equipment.slug;
+}
+
+// Изображение по умолчанию
+const equipmentImage = image || "https://images.unsplash.com/photo-1605000797499-95a51c5269ae?ixlib=rb-4.0.3&auto=format&fit=crop&w=1471&q=80";
 ---
 
 <div class="equipment-card bg-white overflow-hidden shadow-lg border border-stone-100 h-full flex flex-col">
   <div class="relative">
-    <img src={image} alt={title} class="w-full h-48 object-cover">
+    <img src={equipmentImage} alt={title} class="w-full h-48 object-cover">
     <div class="absolute top-4 right-4">
       {available ? (
         <span class="bg-green-100 text-green-800 text-xs px-2 py-1 rounded-full">Доступно</span>
@@ -30,7 +60,7 @@ const { title, description, category, pricePerDay, pricePerHour, image, availabl
     <div class="space-y-2 mb-4">
       <div class="flex justify-between items-center">
         <span class="text-stone-600">За сутки:</span>
-        <span class="font-semibold text-stone-800">{pricePerDay.toLocaleString('ru-RU')} ₽</span>
+        <span class="font-semibold text-stone-800">{pricePerDay?.toLocaleString('ru-RU')} ₽</span>
       </div>
       {pricePerHour && (
         <div class="flex justify-between items-center">
@@ -42,14 +72,14 @@ const { title, description, category, pricePerDay, pricePerHour, image, availabl
     
     <div class="flex space-x-2 mt-auto">
       <a 
-        href={`/equipment/${equipment.slug}`} 
+        href={`/equipment/${slug}`} 
         class="flex-1 bg-stone-100 hover:bg-stone-200 text-stone-800 font-medium py-2 px-4 transition duration-300 text-center"
       >
         Подробнее
       </a>
       <button 
         class="flex-1 bg-orange-600 hover:bg-orange-700 text-white font-medium py-2 px-4 transition duration-300"
-        onclick="openRentalModal('{title}')"
+        onclick={`openRentalModal('${title}')`}
       >
         Арендовать
       </button>

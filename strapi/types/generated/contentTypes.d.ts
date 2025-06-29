@@ -377,7 +377,7 @@ export interface ApiArticleArticle extends Struct.CollectionTypeSchema {
   collectionName: 'articles';
   info: {
     description: '\u0421\u0442\u0430\u0442\u044C\u0438 \u0438 \u043D\u043E\u0432\u043E\u0441\u0442\u0438 \u043A\u043E\u043C\u043F\u0430\u043D\u0438\u0438';
-    displayName: '\u0421\u0442\u0430\u0442\u044C\u044F';
+    displayName: '\u0421\u0442\u0430\u0442\u044C\u0438';
     pluralName: 'articles';
     singularName: 'article';
   };
@@ -427,7 +427,7 @@ export interface ApiProjectProject extends Struct.CollectionTypeSchema {
   collectionName: 'projects';
   info: {
     description: '\u0412\u044B\u043F\u043E\u043B\u043D\u0435\u043D\u043D\u044B\u0435 \u043F\u0440\u043E\u0435\u043A\u0442\u044B \u043F\u043E \u0441\u0442\u0430\u0431\u0438\u043B\u0438\u0437\u0430\u0446\u0438\u0438 \u0433\u0440\u0443\u043D\u0442\u043E\u0432';
-    displayName: '\u041F\u0440\u043E\u0435\u043A\u0442';
+    displayName: '\u041F\u0440\u043E\u0435\u043A\u0442\u044B';
     pluralName: 'projects';
     singularName: 'project';
   };
@@ -464,10 +464,6 @@ export interface ApiProjectProject extends Struct.CollectionTypeSchema {
     > &
       Schema.Attribute.Required &
       Schema.Attribute.DefaultTo<'\u043F\u043B\u0430\u043D\u0438\u0440\u0443\u0435\u0442\u0441\u044F'>;
-    technologies: Schema.Attribute.Relation<
-      'manyToMany',
-      'api::technology.technology'
-    >;
     title: Schema.Attribute.String &
       Schema.Attribute.Required &
       Schema.Attribute.SetMinMaxLength<{
@@ -483,7 +479,7 @@ export interface ApiTechnologyTechnology extends Struct.CollectionTypeSchema {
   collectionName: 'technologies';
   info: {
     description: '\u0422\u0435\u0445\u043D\u043E\u043B\u043E\u0433\u0438\u0438 \u0441\u0442\u0430\u0431\u0438\u043B\u0438\u0437\u0430\u0446\u0438\u0438 \u0433\u0440\u0443\u043D\u0442\u043E\u0432';
-    displayName: '\u0422\u0435\u0445\u043D\u043E\u043B\u043E\u0433\u0438\u044F';
+    displayName: '\u0422\u0435\u0445\u043D\u043E\u043B\u043E\u0433\u0438\u0438';
     pluralName: 'technologies';
     singularName: 'technology';
   };

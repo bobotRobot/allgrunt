@@ -1,8 +1,29 @@
 ---
-import type { CollectionEntry } from 'astro:content';
+interface Props {
+  technology: any;
+  useStrapi?: boolean;
+}
 
-const { technology } = Astro.props;
-const { title, description, icon, date } = technology.data;
+const { technology, useStrapi = false } = Astro.props;
+
+// Определяем поля в зависимости от источника данных
+let title, description, icon, date, slug;
+
+if (useStrapi) {
+  // Данные из Strapi
+  title = technology.title;
+  description = technology.description;
+  icon = technology.icon;
+  date = technology.createdAt || technology.publishedAt;
+  slug = technology.slug;
+} else {
+  // Локальные данные из Astro Content
+  title = technology.data.title;
+  description = technology.data.description;
+  icon = technology.data.icon;
+  date = technology.data.date;
+  slug = technology.slug;
+}
 ---
 
 <div class="technology-card bg-white overflow-hidden shadow-lg border border-stone-100 h-full flex flex-col">
@@ -20,7 +41,7 @@ const { title, description, icon, date } = technology.data;
     <p class="text-stone-600 mb-4 flex-grow">{description}</p>
     
     <div class="mt-auto">
-      <a href={`/technologies/${technology.slug}`} class="text-orange-600 font-medium hover:text-orange-700 transition duration-300 inline-flex items-center">
+      <a href={`/technologies/${slug}`} class="text-orange-600 font-medium hover:text-orange-700 transition duration-300 inline-flex items-center">
         Подробнее
         <i class="fas fa-arrow-right ml-2"></i>
       </a>

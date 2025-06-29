@@ -1,9 +1,29 @@
 ---
 import EquipmentCard from '@components/equipment-card.astro';
-import { getCollection } from 'astro:content';
+import { EquipmentAPI, StrapiService } from '@lib/strapi.ts';
 
-const allEquipment = await getCollection('equipment');
-const featuredEquipment = allEquipment.slice(0, 4);
+// Пытаемся получить данные из Strapi, если не получается - используем локальные
+let equipment = [];
+let useLocalData = false;
+
+try {
+  const strapiResponse = await EquipmentAPI.getFeatured(4);
+  if (strapiResponse && Array.isArray(strapiResponse)) {
+    equipment = StrapiService.transformEntities(strapiResponse);
+  } else {
+    useLocalData = true;
+  }
+} catch (error) {
+  console.log('Strapi недоступен, используем локальные данные');
+  useLocalData = true;
+}
+
+// Если Strapi недоступен, используем локальные данные
+if (useLocalData) {
+  const { getCollection } = await import('astro:content');
+  const allEquipment = await getCollection('equipment');
+  equipment = allEquipment.slice(0, 4);
+}
 ---
 
 <section id="equipment" class="py-16 bg-white">
@@ -14,8 +34,8 @@ const featuredEquipment = allEquipment.slice(0, 4);
     </div>
     
     <div class="grid md:grid-cols-2 lg:grid-cols-2 gap-8">
-      {featuredEquipment.map((equipment) => (
-        <EquipmentCard equipment={equipment} />
+      {equipment.map((item) => (
+        <EquipmentCard equipment={item} useStrapi={!useLocalData} />
       ))}
     </div>
     

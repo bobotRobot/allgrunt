@@ -4,7 +4,7 @@
   "info": {
     "singularName": "technology",
     "pluralName": "technologies",
-    "displayName": "Технология",
+    "displayName": "Технологии",
     "description": "Технологии стабилизации грунтов"
   },
   "options": {
@@ -14,8 +14,8 @@
   "attributes": {
     "title": {
       "type": "string",
-      "required": true,
-      "maxLength": 255
+      "maxLength": 255,
+      "required": true
     },
     "description": {
       "type": "text",
@@ -27,8 +27,8 @@
     },
     "icon": {
       "type": "string",
-      "required": true,
-      "default": "fa-cogs"
+      "default": "fa-cogs",
+      "required": true
     },
     "slug": {
       "type": "uid",
@@ -43,12 +43,14 @@
       "type": "media",
       "multiple": false,
       "required": false,
-      "allowedTypes": ["images"]
+      "allowedTypes": [
+        "images"
+      ]
     },
     "seo": {
       "type": "component",
-      "repeatable": false,
-      "component": "shared.seo"
+      "component": "shared.seo",
+      "repeatable": false
     }
   }
 }

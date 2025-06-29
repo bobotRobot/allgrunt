@@ -1,8 +1,31 @@
 ---
 import type { CollectionEntry } from 'astro:content';
 
-const { article } = Astro.props;
-const { title, description, date, imageSrc } = article.data;
+interface Props {
+  article: any;
+  useStrapi?: boolean;
+}
+
+const { article, useStrapi = false } = Astro.props;
+
+// Определяем поля в зависимости от источника данных
+let title, description, date, imageSrc, slug;
+
+if (useStrapi) {
+  // Данные из Strapi
+  title = article.title;
+  description = article.description;
+  date = article.createdAt || article.publishedAt;
+  imageSrc = article.image?.url ? `${import.meta.env.STRAPI_URL || 'http://localhost:1337'}${article.image.url}` : null;
+  slug = article.slug;
+} else {
+  // Локальные данные из Astro Content
+  title = article.data.title;
+  description = article.data.description;
+  date = article.data.date;
+  imageSrc = article.data.imageSrc;
+  slug = article.slug;
+}
 
 // Изображение по умолчанию, если не указано
 const articleImage = imageSrc || "https://images.unsplash.com/photo-1605000797499-95a51c5269ae?ixlib=rb-4.0.3&auto=format&fit=crop&w=1471&q=80";
@@ -25,7 +48,7 @@ const articleImage = imageSrc || "https://images.unsplash.com/photo-160500079749
     <p class="text-stone-600 mb-4 leading-relaxed flex-grow">{description}</p>
     <div class="mt-auto">
       <a 
-        href={`/articles/${article.slug}`} 
+        href={`/articles/${slug}`} 
         class="text-orange-600 font-semibold hover:text-orange-700 transition duration-300 inline-flex items-center"
       >
         Читать далее

@@ -4,7 +4,7 @@
   "info": {
     "singularName": "article",
     "pluralName": "articles",
-    "displayName": "Статья",
+    "displayName": "Статьи",
     "description": "Статьи и новости компании"
   },
   "options": {
@@ -14,8 +14,8 @@
   "attributes": {
     "title": {
       "type": "string",
-      "required": true,
-      "maxLength": 255
+      "maxLength": 255,
+      "required": true
     },
     "description": {
       "type": "text",
@@ -38,18 +38,20 @@
       "type": "media",
       "multiple": false,
       "required": false,
-      "allowedTypes": ["images"]
+      "allowedTypes": [
+        "images"
+      ]
     },
     "author": {
       "type": "string",
-      "required": false,
-      "default": "Редакция"
+      "default": "Редакция",
+      "required": false
     },
     "readTime": {
       "type": "integer",
       "required": false,
-      "min": 1,
-      "default": 5
+      "default": 5,
+      "min": 1
     },
     "tags": {
       "type": "json",
@@ -57,8 +59,8 @@
     },
     "seo": {
       "type": "component",
-      "repeatable": false,
-      "component": "shared.seo"
+      "component": "shared.seo",
+      "repeatable": false
     }
   }
 }
