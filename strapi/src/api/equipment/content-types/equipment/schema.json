@@ -1,0 +1,84 @@
+{
+  "kind": "collectionType",
+  "collectionName": "equipment",
+  "info": {
+    "singularName": "equipment",
+    "pluralName": "equipment",
+    "displayName": "Техника",
+    "description": "Спецтехника для аренды"
+  },
+  "options": {
+    "draftAndPublish": true
+  },
+  "pluginOptions": {},
+  "attributes": {
+    "title": {
+      "type": "string",
+      "maxLength": 255,
+      "required": true
+    },
+    "description": {
+      "type": "text",
+      "required": true
+    },
+    "content": {
+      "type": "richtext",
+      "required": false
+    },
+    "category": {
+      "type": "string",
+      "required": true
+    },
+    "pricePerDay": {
+      "type": "decimal",
+      "required": true
+    },
+    "pricePerHour": {
+      "type": "decimal",
+      "required": false
+    },
+    "slug": {
+      "type": "uid",
+      "targetField": "title",
+      "required": true
+    },
+    "featured": {
+      "type": "boolean",
+      "default": false
+    },
+    "available": {
+      "type": "boolean",
+      "default": true
+    },
+    "image": {
+      "type": "media",
+      "multiple": false,
+      "required": false,
+      "allowedTypes": [
+        "images"
+      ]
+    },
+    "gallery": {
+      "type": "media",
+      "multiple": true,
+      "required": false,
+      "allowedTypes": [
+        "images"
+      ]
+    },
+    "specifications": {
+      "type": "component",
+      "component": "equipment.specifications",
+      "repeatable": false
+    },
+    "features": {
+      "type": "json",
+      "required": false
+    },
+    "seo": {
+      "type": "component",
+      "component": "shared.seo",
+      "repeatable": false
+    }
+  }
+}
