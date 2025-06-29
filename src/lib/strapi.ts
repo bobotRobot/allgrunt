@@ -15,7 +15,7 @@ const strapiApi = axios.create({
     'Content-Type': 'application/json',
     ...(STRAPI_TOKEN && { Authorization: `Bearer ${STRAPI_TOKEN}` }),
   },
-  timeout: 10000, // 10 секунд таймаут
+  timeout: 5000, // Уменьшен таймаут для быстрого fallback
 });
 
 // Добавляем интерцептор для логирования ошибок
@@ -77,12 +77,11 @@ export interface StrapiImage {
 
 // Функции для работы с API
 export class StrapiService {
-  // Проверка доступности Strapi - используем конкретный эндпоинт
+  // Проверка доступности Strapi
   static async checkConnection(): Promise<boolean> {
     try {
-      // Проверяем доступность через эндпоинт users-permissions
-      const response = await axios.get(`${STRAPI_URL}/api/users-permissions/roles`, { 
-        timeout: 5000,
+      const response = await axios.get(`${STRAPI_URL}/api/technologies?pagination[limit]=1`, { 
+        timeout: 3000,
         headers: {
           'Content-Type': 'application/json',
           ...(STRAPI_TOKEN && { Authorization: `Bearer ${STRAPI_TOKEN}` }),
@@ -91,23 +90,8 @@ export class StrapiService {
       console.log('Strapi connection successful');
       return true;
     } catch (error) {
-      console.error('Strapi connection failed:', error.message);
-      
-      // Дополнительная проверка - пробуем получить любую коллекцию
-      try {
-        await axios.get(`${STRAPI_URL}/api/technologies?pagination[limit]=1`, { 
-          timeout: 5000,
-          headers: {
-            'Content-Type': 'application/json',
-            ...(STRAPI_TOKEN && { Authorization: `Bearer ${STRAPI_TOKEN}` }),
-          }
-        });
-        console.log('Strapi connection successful via technologies endpoint');
-        return true;
-      } catch (secondError) {
-        console.error('Secondary Strapi check also failed:', secondError.message);
-        return false;
-      }
+      console.log('Strapi недоступен, используем локальные данные');
+      return false;
     }
   }
 
@@ -224,7 +208,21 @@ export class StrapiService {
       return response.data.data || [];
     } catch (error) {
       console.error(`Error fetching featured ${collection}:`, error.message);
-      return [];
+      // Если нет featured записей, возвращаем обычные
+      try {
+        const fallbackQuery = qs.stringify(
+          {
+            populate: options.populate || '*',
+            pagination: { limit },
+            publicationState: 'live',
+          },
+          { encodeValuesOnly: true }
+        );
+        const fallbackResponse = await strapiApi.get(`/${collection}?${fallbackQuery}`);
+        return fallbackResponse.data.data || [];
+      } catch (fallbackError) {
+        return [];
+      }
     }
   }
 
