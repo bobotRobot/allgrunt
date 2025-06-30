@@ -3,6 +3,7 @@ import BaseLayout from '@layouts/BaseLayout.astro';
 import Header from '@components/header.astro';
 import Footer from '@components/footer.astro';
 import { getCollection } from 'astro:content';
+import equipmentItem from 'strapi/src/api/equipment-item/controllers/equipment-item';
 
 export async function getStaticPaths() {
   const equipment = await getCollection("equipment");
@@ -197,9 +198,9 @@ const { title, description, category, pricePerDay, pricePerHour, specifications,
 <script>
   // Модальное окно
   function openRentalModal(equipmentName) {
-    document.getElementById('equipment-name').value = equipmentName;
-    document.getElementById('rental-modal').classList.remove('hidden');
-    document.body.style.overflow = 'hidden';
+    //document.getElementById('equipment-name').value = equipmentName;
+    //document.getElementById('rental-modal').classList.remove('hidden');
+    //document.body.style.overflow = 'hidden';
   }
 
   function closeRentalModal() {
@@ -209,10 +210,10 @@ const { title, description, category, pricePerDay, pricePerHour, specifications,
 
   // Обработка формы
   document.getElementById('rental-form').addEventListener('submit', function(e) {
-    e.preventDefault();
-    alert('Спасибо! Ваша заявка на аренду отправлена. Мы свяжемся с вами в ближайшее время.');
-    closeRentalModal();
-    this.reset();
+    //e.preventDefault();
+    //alert('Спасибо! Ваша заявка на аренду отправлена. Мы свяжемся с вами в ближайшее время.');
+    //closeRentalModal();
+    //this.reset();
   });
 </script>
 </BaseLayout>

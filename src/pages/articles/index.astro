@@ -18,7 +18,8 @@ try {
   });
   
   if (strapiResponse?.data && Array.isArray(strapiResponse.data)) {
-    articles = StrapiService.transformEntities(strapiResponse.data);
+    //articles = StrapiService.transformEntities(strapiResponse);
+    articles = strapiResponse.data;
     totalPages = strapiResponse.meta?.pagination?.pageCount || 1;
   } else {
     useLocalData = true;

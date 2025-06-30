@@ -28,7 +28,7 @@
     "icon": {
       "type": "string",
       "default": "fa-cogs",
-      "required": true
+      "required": false
     },
     "slug": {
       "type": "uid",

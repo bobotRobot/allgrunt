@@ -68,7 +68,7 @@
     },
     "specifications": {
       "type": "component",
-      "component": "equipment.specifications",
+      "component": "equipment-item.specifications",
       "repeatable": false
     },
     "features": {

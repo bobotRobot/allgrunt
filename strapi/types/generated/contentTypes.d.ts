@@ -459,7 +459,7 @@ export interface ApiEquipmentItemEquipmentItem
     seo: Schema.Attribute.Component<'shared.seo', false>;
     slug: Schema.Attribute.UID<'title'> & Schema.Attribute.Required;
     specifications: Schema.Attribute.Component<
-      'equipment.specifications',
+      'equipment-item.specifications',
       false
     >;
     title: Schema.Attribute.String &
@@ -543,9 +543,7 @@ export interface ApiTechnologyTechnology extends Struct.CollectionTypeSchema {
       Schema.Attribute.Private;
     description: Schema.Attribute.Text & Schema.Attribute.Required;
     featured: Schema.Attribute.Boolean & Schema.Attribute.DefaultTo<false>;
-    icon: Schema.Attribute.String &
-      Schema.Attribute.Required &
-      Schema.Attribute.DefaultTo<'fa-cogs'>;
+    icon: Schema.Attribute.String & Schema.Attribute.DefaultTo<'fa-cogs'>;
     image: Schema.Attribute.Media<'images'>;
     locale: Schema.Attribute.String & Schema.Attribute.Private;
     localizations: Schema.Attribute.Relation<

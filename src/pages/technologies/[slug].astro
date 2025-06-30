@@ -17,6 +17,9 @@ export async function getStaticPaths() {
 const { technology } = Astro.props;
 const { Content } = await technology.render();
 const { title, description, icon, date } = technology.data;
+
+console.log("technology ==> ", technology);
+console.log("Content ==> ", Content);
 ---
 
 <BaseLayout>
