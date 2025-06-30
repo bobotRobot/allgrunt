@@ -285,16 +285,16 @@ export const ArticlesAPI = {
 };
 
 export const EquipmentAPI = {
-  getAll: (options = {}) => StrapiService.getCollection('equipment-items', {
+  getAll: (options = {}) => StrapiService.getCollection('equipment', {
     sort: ['createdAt:desc'],
     ...options
   }),
-  getBySlug: (slug: string) => StrapiService.getEntryBySlug('equipment-items', slug),
-  getFeatured: (limit = 4) => StrapiService.getFeaturedEntries('equipment-items', limit),
-  getByCategory: (category: string) => StrapiService.getCollection('equipment-items', {
+  getBySlug: (slug: string) => StrapiService.getEntryBySlug('equipment', slug),
+  getFeatured: (limit = 4) => StrapiService.getFeaturedEntries('equipment', limit),
+  getByCategory: (category: string) => StrapiService.getCollection('equipment', {
     filters: { category: { $eq: category } }
   }),
-  getAvailable: () => StrapiService.getCollection('equipment-items', {
+  getAvailable: () => StrapiService.getCollection('equipment', {
     filters: { available: { $eq: true } }
   }),
 };
